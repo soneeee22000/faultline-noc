@@ -1,0 +1,41 @@
+{
+ "container": null,
+ "content": [
+  {
+   "signature": "EsoCCpABCBEYAipAdS4J9VEVzmpEfZlD0RUsqXZpM0IEXJkwmxYktyHnKUT1/at2G+0cgqbZw86ZJB7JzJBeRrhL0KO6H7emUcfBRTIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRiZjk3YmE4MC1jNWY5LTRmMTMtOGE0NC00ZDU4MDYwZDUzMjSoAcCdp9UGEgx+1S1G66ZpaMIkQQYaDPtfdLco3IeP8dB2FyIwYfBseMcDBqzk1SFY2+67DPU1LzmGYqSIyGGoLqLkg7RYLwWud3ejfYtXzC6oOOnjKmfqrKeBJxvimSfT9MfzEmO8zYXmVo3vMAsnXxxwHJnFMCsj1rcBjEbrTqNnCl8SFYwkIqw8iTHt4/BMRKN/1/jf8lw+3Bc8tpShuRGDaCa7zHtQALDUjzmVyfcBQA/2BPjK+V4+dSsyGAE=",
+   "thinking": "",
+   "type": "thinking"
+  },
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01E4JT78vFXzWNePjtXodrw2",
+   "input": {},
+   "name": "get_logs",
+   "type": "tool_use"
+  }
+ ],
+ "id": "msg_011Cf64SFU6DbdELdZXJHrKk",
+ "model": "claude-sonnet-5",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 1051
+  },
+  "cache_creation_input_tokens": 1051,
+  "cache_read_input_tokens": 1561,
+  "inference_geo": "global",
+  "input_tokens": 2,
+  "output_tokens": 65,
+  "output_tokens_details": {
+   "thinking_tokens": 36
+  },
+  "service_tier": "standard"
+ }
+}

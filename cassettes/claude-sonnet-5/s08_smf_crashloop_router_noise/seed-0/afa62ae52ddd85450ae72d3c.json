@@ -1,0 +1,75 @@
+{
+ "container": null,
+ "content": [
+  {
+   "text": "This confirms SMF crashloop: repeated process restarts correlating with success ratio drops and AMF timeouts.",
+   "type": "text"
+  },
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_0196zaogckAqZKZFX9un9bSc",
+   "input": {
+    "cited_evidence_ids": [
+     "alm-00010",
+     "alm-00019",
+     "alm-00028",
+     "alm-00034",
+     "alm-00044",
+     "log-00009",
+     "log-00022",
+     "log-00033",
+     "log-00046",
+     "log-00057",
+     "kpi-00041",
+     "kpi-00071",
+     "kpi-00101",
+     "kpi-00131",
+     "kpi-00161",
+     "alm-00011",
+     "alm-00012",
+     "alm-00020",
+     "alm-00021"
+    ],
+    "confidence": 0.9,
+    "fault_class": "nf_crashloop",
+    "proposed_actions": [
+     {
+      "kind": "restart_nf",
+      "target": "smf-1"
+     },
+     {
+      "kind": "open_ticket",
+      "target": "smf-1"
+     }
+    ],
+    "root_cause_nf": "smf-1"
+   },
+   "name": "submit_rca",
+   "type": "tool_use"
+  }
+ ],
+ "id": "msg_011Cf64Xz2owzkH4gcpCEmbA",
+ "model": "claude-sonnet-5",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 1612
+  },
+  "cache_creation_input_tokens": 1612,
+  "cache_read_input_tokens": 4764,
+  "inference_geo": "global",
+  "input_tokens": 2,
+  "output_tokens": 365,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "service_tier": "standard"
+ }
+}

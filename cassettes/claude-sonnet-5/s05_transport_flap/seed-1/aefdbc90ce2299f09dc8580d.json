@@ -1,0 +1,66 @@
+{
+ "container": null,
+ "content": [
+  {
+   "text": "This confirms recurring link flaps on rtr-1's core-facing port at t=10,15,20,25, each time coinciding with simultaneous outages across all dependent links (N2, N3, N11, N4, Nnrf) — consistent with a shared transport router flapping rather than any single NF crash-looping.",
+   "type": "text"
+  },
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01SxwkcWD5aHk4ePirc2y8o6",
+   "input": {
+    "cited_evidence_ids": [
+     "alm-00008",
+     "alm-00019",
+     "alm-00032",
+     "alm-00045",
+     "log-00020",
+     "log-00037",
+     "log-00055",
+     "log-00067",
+     "alm-00009",
+     "alm-00010",
+     "alm-00011",
+     "alm-00013",
+     "alm-00016",
+     "alm-00017"
+    ],
+    "confidence": 0.9,
+    "fault_class": "transport_flap",
+    "proposed_actions": [
+     {
+      "kind": "open_ticket",
+      "target": "rtr-1"
+     }
+    ],
+    "root_cause_nf": "rtr-1"
+   },
+   "name": "submit_rca",
+   "type": "tool_use"
+  }
+ ],
+ "id": "msg_011Cf64LJefmZ6iokCgznKuY",
+ "model": "claude-sonnet-5",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 509
+  },
+  "cache_creation_input_tokens": 509,
+  "cache_read_input_tokens": 4813,
+  "inference_geo": "global",
+  "input_tokens": 2,
+  "output_tokens": 372,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "service_tier": "standard"
+ }
+}

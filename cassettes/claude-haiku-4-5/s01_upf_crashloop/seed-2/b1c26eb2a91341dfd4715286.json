@@ -1,0 +1,39 @@
+{
+ "container": null,
+ "content": [
+  {
+   "text": "Now let me get more detailed KPI information for the UPF, which appears to be crashing repeatedly:",
+   "type": "text"
+  },
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01Rfk2siHDNgZizvYcgTFYwM",
+   "input": {
+    "node": "upf-1"
+   },
+   "name": "get_kpis",
+   "type": "tool_use"
+  }
+ ],
+ "id": "msg_011Cf64GG1ohEnXSA4wETMKC",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 6935
+  },
+  "cache_creation_input_tokens": 6935,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 7,
+  "output_tokens": 82,
+  "service_tier": "standard"
+ }
+}

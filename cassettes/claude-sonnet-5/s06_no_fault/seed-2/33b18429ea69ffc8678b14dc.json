@@ -1,0 +1,59 @@
+{
+ "container": null,
+ "content": [
+  {
+   "text": "All KPIs are nominal, no crash loops, no transport flaps evident. This looks like normal operation with only benign warning-level alarms.",
+   "type": "text"
+  },
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_016mgNkMVHYpT5NbEiRCmAwD",
+   "input": {
+    "cited_evidence_ids": [
+     "kpi-00005",
+     "kpi-00179",
+     "kpi-00004",
+     "kpi-00178",
+     "kpi-00001",
+     "kpi-00175",
+     "alm-00008"
+    ],
+    "confidence": 0.75,
+    "fault_class": "insufficient_evidence",
+    "proposed_actions": [
+     {
+      "kind": "open_ticket",
+      "target": "smf-1"
+     }
+    ],
+    "root_cause_nf": null
+   },
+   "name": "submit_rca",
+   "type": "tool_use"
+  }
+ ],
+ "id": "msg_011Cf64SazqtLzkFGRFMXByr",
+ "model": "claude-sonnet-5",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 3150
+  },
+  "cache_creation_input_tokens": 3150,
+  "cache_read_input_tokens": 4617,
+  "inference_geo": "global",
+  "input_tokens": 2,
+  "output_tokens": 283,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "service_tier": "standard"
+ }
+}

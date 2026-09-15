@@ -1,0 +1,50 @@
+{
+ "container": null,
+ "content": [
+  {
+   "signature": "EpICCpABCBEYAipAUqwLvxB6WjCU7nacYqXas7nF92wOiNSvYmRziKFADJkg+OogoC3PPUT9ihCswXvu6X+55BnRKIx37qMItvJLWjIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRiZjk3YmE4MC1jNWY5LTRmMTMtOGE0NC00ZDU4MDYwZDUzMjSoAZyep9UGEgxwYuvpOI7ufixcqI4aDEWQhBsy7eMP1hy4biIwwttxTKajQBZ3OGy+s0SXEqz20iJdkB/+ekS4lG6YyMdR4rCNW7a6apTIeOM3o19fKi8LvT8XNqa1MDzpnDoEhQpZVLR/Law/OuAfSud5w5IZP1P37AO1TwfX9jpgsjJ2zhgB",
+   "thinking": "",
+   "type": "thinking"
+  },
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01GK3KMTtC4exr9f9KSrifrS",
+   "input": {},
+   "name": "get_topology",
+   "type": "tool_use"
+  },
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01BcasERYsSise3iV7dgAZN4",
+   "input": {},
+   "name": "get_alarms",
+   "type": "tool_use"
+  }
+ ],
+ "id": "msg_011Cf64Z3kapGoW5ZZoiMVtR",
+ "model": "claude-sonnet-5",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 1561,
+  "inference_geo": "global",
+  "input_tokens": 2,
+  "output_tokens": 65,
+  "output_tokens_details": {
+   "thinking_tokens": 12
+  },
+  "service_tier": "standard"
+ }
+}

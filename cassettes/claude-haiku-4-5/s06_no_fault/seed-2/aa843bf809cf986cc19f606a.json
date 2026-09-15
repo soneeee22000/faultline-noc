@@ -1,0 +1,55 @@
+{
+ "container": null,
+ "content": [
+  {
+   "text": "I'll start by gathering telemetry from the network to investigate any faults.",
+   "type": "text"
+  },
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_015bxMSdKQwQtNjyTLfutdBF",
+   "input": {},
+   "name": "get_topology",
+   "type": "tool_use"
+  },
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_011tQre92fybSdfAysRZxwPR",
+   "input": {},
+   "name": "get_alarms",
+   "type": "tool_use"
+  },
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01LVG4euocR92tn9JEa4HAgG",
+   "input": {},
+   "name": "get_logs",
+   "type": "tool_use"
+  }
+ ],
+ "id": "msg_011Cf64RN1D8p8dZf4CTEsTL",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1411,
+  "output_tokens": 93,
+  "service_tier": "standard"
+ }
+}

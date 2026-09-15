@@ -1,0 +1,77 @@
+{
+ "container": null,
+ "content": [
+  {
+   "signature": "EtILCpABCBEYAipAbpZtb3eU6H3E4DmMEQntMYtHGnX4C29F7o1CXFuWHnPmeR2x9ow+sARL0OMpRiQ4okyEotpb9VzmTWqSJbh2/TIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRiZjk3YmE4MC1jNWY5LTRmMTMtOGE0NC00ZDU4MDYwZDUzMjSoAdWep9UGEgysLZcnIClIGmJwiPoaDKclL5qMsbdByYkSUyIwuxSTUnd4HbadViXUj+vAVebt0K02NycgkdN9m3zFqYo/MlYFfOi62fm6sztmD+YeKu4JpY4dcYzBzKbNLF2+TgbqDgW/rvdaZPwV89g2ODIout9tIA44BY/5YYZnY7CL1I/xv9Um+9pmPXEAY/MVhHb/k6VLNHUQq70V4ki2eUAOYTFwY9uFMyyY4xuES3a67F6jj/haQjdI+XkOVqmxPRTV9f4EXvXpV8dCPTppH15ffty3w33yufAaRrIaTcLsuuczA+CVSnNkhcSykVsgpxOHryLkjKgkRk+d2VgzF82Yfn+qYcUJP6fjqHZaxq/+p9zBuIYdNjNUqv8acu1p+sgnMV/k801b8u2a1skYD5XWoddVPVXBC2B1WXjkl7UV4oFHiWCAl9cun//Um6m2ikypfjV66nRYH1vAOMOcf1LL9kSq/fV0ki+9MGAPe2+Xq/hls02ctk3cIcfwhY1SxbPyOq0FtAMZ0rorpspbgwzQhuwXKY4TjN9DPOfgI8EzB/8JKOsJWkgk9P5O3rmjVjXYUafLsiR4BbkeV02+tKQQEg0sWtmQ1KPo9toqduJnpSyheyxw5nYzeAZg1W6XqAskPK75EiDdYdz2tzCuRQQuMW+2yi1L0AXymMrHxRgTj0NNdbMqQ2oOmyC7L8lSxhRPdKKz6LL20q3xXGUuxNOYEezKO5brUNcmRy3JDsRQQYjhL1feD9yZLHh4Hfy6U7cbdzsgzvJLyEHGnLrTFYshibKhwmtt8hIvAum3Hb0TkElW/0beLcFEHpABUHlKG1g9eiQTGRry9oRsSymelJcT5DBc5g576d7D6ZHiiH7p9SaSQn7ObnLPVaepQAkrCZrYOO+k3I014uaow0HVxa0x+iB+FrnCZgB6epgZlMzIgnA1hCCSc0tGICeZjWHZQQYLgBVc0kzCQ40WdHrv6ugp14P0PJOby1l0Rzhaorcr2jUwm5o2ZC2mVVxWoL/Et/bRR5ku1Ca//1sLY125VBGRxx7ZTHfslKPql+XFVDJHMOhq3QGXXiD4Vlxq2EdhKH0mfHNxAz/Pvgd4rpGOY2AuTxduD5t/MEQvIacWstBqAI6X4hIErW/rfgIAEelSGaeytZye4Or/21iZOLNXJBRfV/zFWGD2FNJ6nX1Zulzh4noqmkhUqB00q1py+Rnnu07ond0vWKgtTobjIJq/X4tZcbcCZJWpY7FuO/ICM9ECiHV3Sh2iJ7PRWjh+spzclGDg5fx+TVLKbzsRnKoygdkjwRnIQHol8KGy5MSUhI1gPiAOnx31OVzgssEj1PyE+MXppzW+Fxvc1tBSLRd6WSpLT1NQZwKmEsfavInjperXcPDqEONaqAOksUsMJg3CvMofEuLrqhdaBanZzIG5cKrU8Y+XCgu5IPkoqQfbPGSlFi4Ttp64yLv9hLM1DiQLllxiIK1G1AqPJcEIDTfGFOju7JcValtlzOMgAnymWdLUOEII/j5Ie1fC8tc1ZgpmQwM0tUPEKYZT07Kjo2O5egMMRSQSvUnxiN06ZcsOOcCp3XJYzuDSU+jMQ0E4IvhFeJohsJRr9Suja8AH4CVx5MLXhjLtQyfVs0Q76fmKnglQbAYT7dI6tpJ49xG1AbtCUy3CtPJjtJGC//+9cpI5YkfvfCkewdzj/v6Tt82b5EDJDHW2ZFkpWxEUR0rjnzna/E2APGcxoR3Dhc3bV1aCLR27BkR4cDLRfLZhEDM0q3u0cm5yKPTwM505BSw65E29SIwYAQ==",
+   "thinking": "",
+   "type": "thinking"
+  },
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01DgKgyPP1ZQdPnHMqZeSuaF",
+   "input": {
+    "cited_evidence_ids": [
+     "alm-00009",
+     "alm-00010",
+     "alm-00019",
+     "alm-00027",
+     "alm-00039",
+     "alm-00044",
+     "kpi-00054",
+     "kpi-00060",
+     "kpi-00078",
+     "kpi-00084",
+     "kpi-00102",
+     "kpi-00108",
+     "kpi-00126",
+     "kpi-00132",
+     "kpi-00150",
+     "kpi-00156",
+     "kpi-00174",
+     "kpi-00180",
+     "kpi-00004",
+     "kpi-00172"
+    ],
+    "confidence": 0.72,
+    "fault_class": "nf_crashloop",
+    "proposed_actions": [
+     {
+      "kind": "restart_nf",
+      "target": "upf-1"
+     },
+     {
+      "kind": "open_ticket",
+      "target": "upf-1"
+     }
+    ],
+    "root_cause_nf": "upf-1"
+   },
+   "name": "submit_rca",
+   "type": "tool_use"
+  }
+ ],
+ "id": "msg_011Cf64crJ7tks1iipALbU2G",
+ "model": "claude-sonnet-5",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 1597
+  },
+  "cache_creation_input_tokens": 1597,
+  "cache_read_input_tokens": 7043,
+  "inference_geo": "global",
+  "input_tokens": 2,
+  "output_tokens": 810,
+  "output_tokens_details": {
+   "thinking_tokens": 462
+  },
+  "service_tier": "standard"
+ }
+}

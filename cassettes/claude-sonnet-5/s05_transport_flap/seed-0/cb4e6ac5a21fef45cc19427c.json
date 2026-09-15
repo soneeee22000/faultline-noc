@@ -1,0 +1,42 @@
+{
+ "container": null,
+ "content": [
+  {
+   "text": "Clear pattern: repeated LINK_FLAP alarms on rtr-1 every 5 seconds, each followed immediately by symptoms on all dependent links (N2 SCTP down, GTP-U failures, N11 timeouts, PFCP failures, NRF discovery failures). This is consistent with transport_flap originating at rtr-1.",
+   "type": "text"
+  },
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01DmmRcwazZQg4hWrDgXtP39",
+   "input": {
+    "node": "rtr-1"
+   },
+   "name": "get_logs",
+   "type": "tool_use"
+  }
+ ],
+ "id": "msg_011Cf64Jm4MKNGKFQGFtceb9",
+ "model": "claude-sonnet-5",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 3519
+  },
+  "cache_creation_input_tokens": 3519,
+  "cache_read_input_tokens": 1561,
+  "inference_geo": "global",
+  "input_tokens": 2,
+  "output_tokens": 168,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "service_tier": "standard"
+ }
+}

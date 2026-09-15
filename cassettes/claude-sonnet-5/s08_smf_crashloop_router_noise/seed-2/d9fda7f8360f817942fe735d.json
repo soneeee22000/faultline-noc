@@ -1,0 +1,73 @@
+{
+ "container": null,
+ "content": [
+  {
+   "text": "Clear evidence of SMF crashlooping, correlating with PDU session success ratio dips and AMF N11 timeouts.",
+   "type": "text"
+  },
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_0148m1mcRV8vYX7qp3ZEdfd7",
+   "input": {
+    "cited_evidence_ids": [
+     "alm-00005",
+     "alm-00011",
+     "alm-00020",
+     "alm-00028",
+     "alm-00036",
+     "log-00014",
+     "log-00025",
+     "log-00035",
+     "log-00045",
+     "log-00061",
+     "kpi-00041",
+     "kpi-00071",
+     "kpi-00101",
+     "kpi-00131",
+     "kpi-00161",
+     "alm-00006",
+     "alm-00007"
+    ],
+    "confidence": 0.92,
+    "fault_class": "nf_crashloop",
+    "proposed_actions": [
+     {
+      "kind": "restart_nf",
+      "target": "smf-1"
+     },
+     {
+      "kind": "open_ticket",
+      "target": "smf-1"
+     }
+    ],
+    "root_cause_nf": "smf-1"
+   },
+   "name": "submit_rca",
+   "type": "tool_use"
+  }
+ ],
+ "id": "msg_011Cf64b4xKe71enA6aebBLs",
+ "model": "claude-sonnet-5",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 1719
+  },
+  "cache_creation_input_tokens": 1719,
+  "cache_read_input_tokens": 4187,
+  "inference_geo": "global",
+  "input_tokens": 2,
+  "output_tokens": 357,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "service_tier": "standard"
+ }
+}
