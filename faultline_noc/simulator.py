@@ -14,7 +14,13 @@ from faultline_noc.models import (
     Severity,
     Telemetry,
 )
-from faultline_noc.scenario import FaultSpec, InjectionSpec, NoiseSpec, Scenario
+from faultline_noc.scenario import (
+    ExtraNoiseAlarm,
+    FaultSpec,
+    InjectionSpec,
+    NoiseSpec,
+    Scenario,
+)
 from faultline_noc.topology import Dependency, Topology
 
 KPI_DECIMALS = 4
@@ -209,6 +215,7 @@ def _emit_tick(
     impaired = _impaired_nodes(fault, topology) if fault is not None else frozenset[str]()
     _emit_kpis(topology, rng, builder, tick, fault, impaired)
     _emit_noise(scenario.noise, topology, rng, builder, tick)
+    _emit_extra_noise(scenario.noise.extra_major, rng, builder, tick)
     if fault is not None:
         _emit_fault(fault, topology, builder, tick)
     _emit_injection(scenario.injection, builder, tick)
@@ -255,11 +262,21 @@ def _emit_noise(
             builder.add_log(tick, node, INFO_LEVEL, rng.choice(NOISE_LOG_LINES), causal=False)
 
 
+def _emit_extra_noise(
+    extra: ExtraNoiseAlarm | None, rng: random.Random, builder: _TelemetryBuilder, tick: int
+) -> None:
+    """Emit the scenario's extra benign major alarm; no random draw happens when it is unset."""
+    if extra is None or rng.random() >= extra.rate:
+        return
+    spec = AlarmSpec(extra.code, Severity.MAJOR, extra.text)
+    builder.add_alarm(tick, extra.node, spec, extra.text, causal=False)
+
+
 def _emit_fault(
     fault: FaultSpec, topology: Topology, builder: _TelemetryBuilder, tick: int
 ) -> None:
-    """Emit the root node's own alarm at each cycle start and symptoms on every consumer."""
-    if fault.is_cycle_start(tick):
+    """Emit the root node's own alarm at each cycle start, unless silent, and consumer symptoms."""
+    if fault.is_cycle_start(tick) and not fault.silent_root:
         root_alarm = ROOT_ALARMS[fault.kind]
         level, message = ROOT_LOGS[fault.kind]
         builder.add_alarm(tick, fault.target, root_alarm, root_alarm.text, causal=True)

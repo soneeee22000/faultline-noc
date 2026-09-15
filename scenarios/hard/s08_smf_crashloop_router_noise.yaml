@@ -1,0 +1,21 @@
+id: s08_smf_crashloop_router_noise
+title: SMF crash-loop while the router repeats a major alarm that does not affect service
+ticks: 30
+noise:
+  warning_alarm_rate: 0.08
+  major_alarm_rate: 0.01
+  info_log_rate: 0.3
+  extra_major:
+    node: rtr-1
+    code: SYSLOG_COLLECTOR_UNREACHABLE
+    text: Remote syslog collector unreachable, buffering messages locally
+    rate: 0.4
+fault:
+  kind: nf_crashloop
+  target: smf-1
+  start_tick: 6
+  period: 5
+  down_ticks: 2
+expected:
+  root_cause_nf: smf-1
+  fault_class: nf_crashloop

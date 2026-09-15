@@ -14,22 +14,39 @@ PROBABILITY_MAX = 1.0
 SCENARIO_ID_PATTERN = r"^s\d{2}_[a-z0-9_]+$"
 
 
+class ExtraNoiseAlarm(FrozenModel):
+    """A recurring major alarm on one node from a condition that does not affect service.
+
+    Its code is deliberately absent from the rule baseline's catalog of benign codes.
+    """
+
+    node: str
+    code: str = Field(min_length=1)
+    text: str = Field(min_length=1)
+    rate: float = Field(ge=PROBABILITY_MIN, le=PROBABILITY_MAX)
+
+
 class NoiseSpec(FrozenModel):
     """Per-node, per-tick probabilities of background alarms and logs."""
 
     warning_alarm_rate: float = Field(ge=PROBABILITY_MIN, le=PROBABILITY_MAX)
     major_alarm_rate: float = Field(ge=PROBABILITY_MIN, le=PROBABILITY_MAX)
     info_log_rate: float = Field(ge=PROBABILITY_MIN, le=PROBABILITY_MAX)
+    extra_major: ExtraNoiseAlarm | None = None
 
 
 class FaultSpec(FrozenModel):
-    """A periodic fault: down for down_ticks at the start of every period, from start_tick."""
+    """A periodic fault: down for down_ticks at the start of every period, from start_tick.
+
+    With silent_root, the target raises no alarm or log of its own; only its KPIs show the fault.
+    """
 
     kind: FaultClass
     target: str
     start_tick: int = Field(ge=0)
     period: int = Field(ge=1)
     down_ticks: int = Field(ge=1)
+    silent_root: bool = False
 
     @model_validator(mode="after")
     def _check_shape(self) -> Self:
@@ -126,6 +143,8 @@ def _referenced_nodes(scenario: Scenario) -> list[str]:
         names.append(scenario.fault.target)
     if scenario.injection is not None:
         names.extend((scenario.injection.node, scenario.injection.action.target))
+    if scenario.noise.extra_major is not None:
+        names.append(scenario.noise.extra_major.node)
     return [name for name in names if name is not None]
 
 

@@ -1,0 +1,17 @@
+id: s09_upf_crashloop_silent
+title: UPF crash-loop whose own restart alarm and log never arrive, so only its throughput KPI shows it
+ticks: 30
+noise:
+  warning_alarm_rate: 0.08
+  major_alarm_rate: 0.01
+  info_log_rate: 0.3
+fault:
+  kind: nf_crashloop
+  target: upf-1
+  start_tick: 8
+  period: 4
+  down_ticks: 2
+  silent_root: true
+expected:
+  root_cause_nf: upf-1
+  fault_class: nf_crashloop
