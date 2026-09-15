@@ -11,9 +11,9 @@ A deterministic evaluation harness for network-ops root cause analysis (RCA) age
 
 ![The five layers of Faultline NOC separating: network, telemetry, agent, guardrails, scorecard](docs/media/layers.gif)
 
-[Results](docs/RESULTS.md) · [How the harness works](docs/HARNESS.md) · [Why this exists](docs/WHY.md)
+**[Project page](https://faultline-noc.vercel.app)** · [Results](docs/RESULTS.md) · [How the harness works](docs/HARNESS.md) · [Why this exists](docs/WHY.md)
 
-The static project page in `site/` is an explainer. It does not run the harness: its numbers are copied from a committed `python -m faultline_noc --all` run, checked by a CI diff on every push.
+The [project page](https://faultline-noc.vercel.app) (source in `site/`) is a static explainer. It does not run the harness: its numbers are copied from a committed `python -m faultline_noc --all` run, checked by a CI diff on every push.
 
 ## Why this exists
 
