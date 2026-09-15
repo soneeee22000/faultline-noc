@@ -2,7 +2,7 @@
 
 These tables come from a fresh run of `python -m faultline_noc --all --json <path>` on 2026-09-15 (Python 3.12.13, Windows 11). The run covers 8000 runs: 10 agents x 4 scenarios x 200 seeds (seeds 0..199). Its JSON output was byte-identical to the committed [`site/src/data/results.json`](../site/src/data/results.json), and CI fails if a fresh run ever differs from that file. Only the table column padding was changed.
 
-Mock agents only. No LLM is called. For what each agent and detector is, see [HARNESS.md](HARNESS.md).
+Mock agents only on this page: no LLM is called here. Claude models are scored by the same detectors in [LLM.md](LLM.md). For what each agent and detector is, see [HARNESS.md](HARNESS.md).
 
 ## Top-1 accuracy, all scenarios
 
@@ -72,7 +72,7 @@ PASS: every mutant tripped its own detector on every applicable run, no mutant t
 
 - **They show that the harness discriminates, not that any AI works.** Most mutants keep high top-1 accuracy because each one is the oracle with one defect. Most of those defects concern safety or evidence, not accuracy. Only the detectors and the action-correctness table catch them.
 - **The rule baseline scores 800/800 at 200 seeds, and 2000/2000 with `--seeds 500`, because it filters the only major noise code.** An earlier version of the README claimed a topology-aware rule was enough, based on 20 seeds. That claim was wrong. Before the filter, `--all --seeds 500` gave the baseline 1946/2000: 474 on s01, 500 on s05, 491 on s06 and 481 on s07. The first failing seeds were 38 (s01), 26 (s06) and 25 (s07). Two or more `NTP_OFFSET_HIGH` noise alarms on `rtr-1` made every NF's upstream look alarming, so the baseline blamed the router as a transport flap. In s06, noise on single NFs also led it to propose `restart_nf` on healthy nodes. The baseline now ignores `NTP_OFFSET_HIGH` through its alarm catalog. `NTP_OFFSET_HIGH` is the only major noise code the simulator emits, so noise can no longer reach the baseline at all.
-- **A 100% baseline means the scenarios are too easy.** Once one known code is filtered out, a rule separates all four scenarios perfectly. An LLM agent cannot beat a perfect baseline here, so the scenarios need service-affecting noise and more than one fault before an LLM comparison means anything. `tests/test_agents.py` pins the baseline's accuracy over 200 seeds per scenario.
+- **A 100% baseline means these four scenarios are too easy.** Once one known code is filtered out, a rule separates all four perfectly. That is why the model comparison in [LLM.md](LLM.md) adds two harder scenarios in `scenarios/hard/`, where the baseline drops to 12/18 overall and fails both of them outright. `tests/test_agents.py` pins the baseline's accuracy over 200 seeds per scenario.
 - **Mutant side effects are declared, not hidden.** The `200/800` in `write_on_non_root` for `mutant_writes_before_gathering` and `mutant_proposes_uncited_write` comes from s06, where any write is off the root. The `600/600` in `citation_unsupported` for `mutant_blames_symptom` holds because a symptom's alarms are not causal evidence. The full list is in [HARNESS.md](HARNESS.md#declared-side-effects).
 - **The network is simulated, not emulated.** These numbers say nothing about how real Open5GS, free5GC or vendor telemetry behaves. See [nf-model.md](nf-model.md).
 

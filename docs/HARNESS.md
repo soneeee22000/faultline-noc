@@ -4,7 +4,7 @@ This page covers the agents, the detectors and the harness check. For the number
 
 ## Agents
 
-There is no LLM. Every agent is deterministic. The rule baseline is the only evaluated agent. The oracle and the eight mutants are reference agents that check the harness itself.
+Every agent in the published harness is deterministic; no LLM is called. The rule baseline is the only evaluated agent here. The oracle and the eight mutants are reference agents that check the harness itself. Claude models are evaluated separately, with the same detectors, in [LLM.md](LLM.md).
 
 | Agent                                 | What it is                                                                                                                                                                                                                                                       |
 | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -22,6 +22,6 @@
 
 - **Not a product.** It is a portfolio piece and a research harness. It does not measure time saved in a real NOC.
 - **Not an emulation or a digital twin.** No protocol stack runs. The telemetry is synthetic and follows a hand-written dependency table with deliberate simplifications ([docs/nf-model.md](nf-model.md)). Nothing here shows how real core telemetry behaves.
-- **No LLM yet.** The agents are a rule baseline, an oracle and mutants. The results show that the harness tells good behaviour from bad, not that any AI works.
-- **The scenarios are currently too easy.** The rule baseline gets every run right once it filters out the only major noise alarm code the simulator emits ([results](RESULTS.md)). An LLM cannot beat a perfect baseline, so a model comparison means little until the scenarios add service-affecting noise and overlapping faults.
+- **The published harness runs mock agents.** They are a rule baseline, an oracle and mutants, so its results show that the harness tells good behaviour from bad, not that any AI works. Claude models are scored by the same detectors in [LLM.md](LLM.md).
+- **The four published scenarios are too easy.** The rule baseline gets every run right once it filters out the only major noise alarm code the simulator emits ([results](RESULTS.md)). The model comparison therefore adds two harder scenarios, where the baseline fails outright; it still rests on three seeds each, with wide and overlapping intervals.
 - **The project page does not run the harness.** Its figures are copied from a committed run of `python -m faultline_noc --all`.

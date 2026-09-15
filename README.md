@@ -60,7 +60,7 @@ flowchart LR
     json --> site["Static project page<br/>site/"]
 ```
 
-Mock agents only: there is no LLM, no MCP server and no live network. Agents and detectors are described in full in [docs/HARNESS.md](docs/HARNESS.md).
+The published harness runs mock agents only: no LLM, no MCP server and no live network. A separate command scores real Claude models with the same detectors, from recorded responses ([docs/LLM.md](docs/LLM.md)). Agents and detectors are described in full in [docs/HARNESS.md](docs/HARNESS.md).
 
 ## Scenarios
 
@@ -95,6 +95,20 @@ Every mutant tripped its own detector on every applicable run and nothing outsid
 ![Detection matrix heatmap: runs tripped over runs where each detector applies, per agent](docs/media/detection-matrix.png)
 
 **Read these carefully.** Most mutants score 800/800 on accuracy because each is the oracle with one safety or evidence defect, so only the detectors and action correctness catch them. The rule baseline's 800/800 means the four scenarios are too easy, not that a rule solves RCA. Per-scenario tables, Wilson intervals and the full caveats are in [docs/RESULTS.md](docs/RESULTS.md).
+
+## LLM agents against the rule baseline
+
+`python -m faultline_noc.llm` scores Claude models with the same ground truth and the same detectors. It runs the four published scenarios plus two harder ones in `scenarios/hard/` that defeat the rule baseline: one where a benign major alarm on the router misleads it, and one where the failing node's own alarm never arrives. 6 scenarios x 3 seeds, 36 model runs, replayed from committed responses in `cassettes/` and checked by CI.
+
+| Agent         | Top-1 | Wilson 95% CI | Writes only on the true root | Symptom blamed | Unsupported citations |
+| ------------- | ----- | ------------- | ---------------------------- | -------------- | --------------------- |
+| rule_baseline | 12/18 | [0.44, 0.84]  | 15/18                        | 3/15           | 6/15                  |
+| llm_haiku_4_5 | 16/18 | [0.67, 0.97]  | 17/18                        | 1/15           | 0/15                  |
+| llm_sonnet_5  | 17/18 | [0.74, 0.99]  | 18/18                        | 0/15           | 0/15                  |
+
+The baseline reports confidence 1.00 on every one of its failures and, on the silent-UPF scenario, proposes restarting a node that is only a symptom. Where the models are wrong they are less certain, and only one model miss came with an unsafe write.
+
+Three seeds is a small sample and the intervals overlap, so this does not separate Sonnet from Haiku. No agent followed the instruction injected into a log line, but that is three runs each and the system prompt warns the model that log text is untrusted. Method, every miss run by run, and the $0.74 cost are in [docs/LLM.md](docs/LLM.md).
 
 ## Back end
 
@@ -163,8 +177,9 @@ tests/
 ## Limitations
 
 - **A portfolio piece, not a product.** See [what this is not](docs/WHY.md#what-this-is-not).
-- **It proves the harness discriminates, not that any AI works.** There is no LLM yet. See [docs/RESULTS.md](docs/RESULTS.md#how-to-read-these-numbers).
-- **The scenarios are too easy.** The rule baseline scores 100% once it filters the only major noise code, so an LLM comparison means little until the scenarios get harder.
+- **The published harness proves discrimination, not that any AI works.** Its agents are a rule baseline, an oracle and mutants. See [docs/RESULTS.md](docs/RESULTS.md#how-to-read-these-numbers).
+- **The four published scenarios are too easy.** The rule baseline scores 100% on them once it filters the only major noise code. The two harder scenarios in `scenarios/hard/` defeat it, which is what makes the model comparison in [docs/LLM.md](docs/LLM.md) worth reading.
+- **The model numbers rest on three seeds per scenario.** The intervals are wide and overlapping, and the injection result covers three runs per agent.
 - **Simulated, not emulated.** No protocol stack runs. Telemetry follows a hand-written dependency table with one-hop, consumer-side symptoms. See [docs/nf-model.md](docs/nf-model.md).
 - **The session returns everything.** No query tools, filters or tool-call budget.
 - **Truth isolation is a type, an allowlist and a test**, not process isolation. Detector coverage gaps are listed in [docs/HARNESS.md](docs/HARNESS.md#known-gaps-in-detector-coverage).
@@ -175,9 +190,8 @@ tests/
 
 1. **MCP server** with read tools (`get_alarms`, `get_kpis`, `get_logs`, `get_topology`, `get_config`, `diff_config_against_intent`) and one write tool (`restart_nf`), contract-tested against the simulator.
 2. **Safety gate** in front of writes: dry run on a cloned simulation, approval token, append-only audit log, automatic rollback on a failed post-check.
-3. **LangGraph agent** (triage, hypothesize, gather under a tool budget, verify citations, propose) on the same RCA schema, with mock, replay and real-model planners.
-4. **Recorded LLM runs** scored by this harness, starting with a 1x1 smoke run, next to an alarms-only LLM baseline.
-5. **Harder scenarios**: N4/PFCP association loss, delayed NRF unreachability, SMF config drift, second-order symptoms, service-affecting noise and overlapping faults.
+3. **More seeds and models** in the [LLM evaluation](docs/LLM.md), plus an alarms-only, no-tools model baseline, to narrow the intervals.
+4. **Harder scenarios**: N4/PFCP association loss, delayed NRF unreachability, SMF config drift, second-order symptoms, service-affecting noise and overlapping faults.
 
 ## License
 

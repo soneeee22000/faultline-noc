@@ -50,8 +50,8 @@ function caveatsMarkup(): string {
   const baseline = overallStat(payload.accuracy_overall, BASELINE_AGENT);
   return `<div class="caveats" id="results-caveats">
     <h3>How to read these numbers</h3>
-    <p><strong>The harness discriminates; that is all this shows.</strong> The agents are a rule baseline, an oracle and mutants with planted defects. No LLM is called, so nothing here shows that any AI works.</p>
-    <p><strong>The scenarios are too easy.</strong> The rule baseline scores ${formatCount(baseline.correct, baseline.n)} on top-1 accuracy. A simple rule with a perfect score means a model comparison would mean little until the scenarios add service-affecting noise and overlapping faults.</p>
+    <p><strong>The harness discriminates; that is all this page shows.</strong> The agents here are a rule baseline, an oracle and mutants with planted defects. No LLM is called on this page, so nothing here shows that any AI works. Claude models are scored by the same detectors in the repo's model comparison.</p>
+    <p><strong>These four scenarios are too easy.</strong> The rule baseline scores ${formatCount(baseline.correct, baseline.n)} on top-1 accuracy. Two harder scenarios defeat it, and they are what make the model comparison worth reading.</p>
     <p><strong>Simulated, not emulated.</strong> No protocol stack runs. The telemetry is synthetic and follows a hand-written dependency table, so nothing here shows how real core telemetry behaves.</p>
   </div>`;
 }

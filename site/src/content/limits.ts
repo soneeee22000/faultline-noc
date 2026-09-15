@@ -19,14 +19,12 @@ export const NOT_THIS: readonly LeadItem[] = [
       "No protocol stack runs. The telemetry is synthetic and follows a hand-written dependency table, so nothing here shows how real core telemetry behaves.",
   },
   {
-    lead: "No LLM yet.",
-    detail:
-      "The agents are a rule baseline, an oracle and mutants. The results show that the harness tells good behaviour from bad, not that any AI works.",
+    lead: "The agents on this page are mocks.",
+    detail: `They are a rule baseline, an oracle and mutants, so these figures show that the harness tells good behaviour from bad, not that any AI works. Claude models are scored by the same detectors in [docs/LLM.md](${repoFile("docs/LLM.md")}).`,
   },
   {
-    lead: "The scenarios are currently too easy.",
-    detail:
-      "The rule baseline scores {baseline}, so a model comparison means little until the scenarios add service-affecting noise and overlapping faults.",
+    lead: "These four scenarios are too easy.",
+    detail: `The rule baseline scores {baseline}. Two harder scenarios defeat it, and they are what make the model comparison in [docs/LLM.md](${repoFile("docs/LLM.md")}) worth reading.`,
   },
   {
     lead: "This page does not run the harness.",
@@ -38,12 +36,11 @@ export const NOT_THIS: readonly LeadItem[] = [
 export const LIMITATIONS: readonly LeadItem[] = [
   {
     lead: "It proves the harness discriminates, not that any AI works.",
-    detail: `There is no LLM yet. See [docs/RESULTS.md](${repoFile("docs/RESULTS.md")}).`,
+    detail: `The agents here are mocks. See [docs/RESULTS.md](${repoFile("docs/RESULTS.md")}).`,
   },
   {
-    lead: "The scenarios are too easy.",
-    detail:
-      "The rule baseline scores {baseline} once it filters the only major noise code, so an LLM comparison means little until the scenarios get harder.",
+    lead: "These four scenarios are too easy.",
+    detail: `The rule baseline scores {baseline} once it filters the only major noise code. It fails both harder scenarios in the model comparison ([docs/LLM.md](${repoFile("docs/LLM.md")})), which rests on three seeds each.`,
   },
   {
     lead: "Simulated, not emulated.",
@@ -63,7 +60,8 @@ export const LIMITATIONS: readonly LeadItem[] = [
   },
   {
     lead: "Confidence is not calibrated,",
-    detail: "and only {scenarios} scenarios exist. The harder ones are on the roadmap.",
+    detail:
+      "and only {scenarios} scenarios exist. The harder ones are on the roadmap.",
   },
 ];
 
@@ -85,9 +83,8 @@ export const ROADMAP: readonly LeadItem[] = [
       "(triage, hypothesize, gather under a tool budget, verify citations, propose) on the same RCA schema, with mock, replay and real-model planners.",
   },
   {
-    lead: "Recorded LLM runs",
-    detail:
-      "scored by this harness, starting with a 1x1 smoke run, next to an alarms-only LLM baseline.",
+    lead: "More seeds and models",
+    detail: `in the recorded model comparison ([docs/LLM.md](${repoFile("docs/LLM.md")})), plus an alarms-only, no-tools model baseline, to narrow the intervals.`,
   },
   {
     lead: "Harder scenarios:",

@@ -43,7 +43,7 @@ export const LAYERS: readonly LayerCopy[] = [
     answer: [
       "The agent returns a structured, schema-validated RCA: root cause NF, fault class, cited evidence ids, confidence and proposed actions.",
       "Ground truth reaches only the reference agents (the oracle and the mutants), never an evaluated agent.",
-      "The agents here are mocks: a rule baseline, an oracle and mutants. No LLM is called.",
+      "The agents scored on this page are mocks: a rule baseline, an oracle and mutants. Claude models are scored by the same detectors in the repo's separate model comparison.",
     ],
     caveat: null,
   },
