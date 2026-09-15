@@ -7,6 +7,7 @@ import pytest
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 PACKAGE_DIR = PROJECT_DIR / "faultline_noc"
+SCRIPTS_DIR = PROJECT_DIR / "scripts"
 MAX_FUNCTION_LINES = 30
 MAX_NESTING_DEPTH = 3
 FUNCTION_NODES = (ast.FunctionDef, ast.AsyncFunctionDef)
@@ -21,7 +22,7 @@ NESTING_NODES = (
     ast.Match,
 )
 PENDING_WORK_MARKER = "TO" + "DO"
-SOURCE_FILES = sorted(PACKAGE_DIR.rglob("*.py"))
+SOURCE_FILES = sorted([*PACKAGE_DIR.rglob("*.py"), *SCRIPTS_DIR.rglob("*.py")])
 
 
 def _functions(path: Path) -> list[ast.FunctionDef | ast.AsyncFunctionDef]:

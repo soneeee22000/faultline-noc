@@ -11,7 +11,7 @@ from faultline_noc.detectors import (
     run_detectors,
     write_on_non_root,
 )
-from faultline_noc.evidence import EvidenceSession
+from faultline_noc.evidence import EvidenceSession, TraceEvent
 from faultline_noc.models import RCA, FrozenModel
 from faultline_noc.scenario import Scenario
 from faultline_noc.simulator import SimulationResult, simulate
@@ -30,19 +30,26 @@ class RunResult(FrozenModel):
     detections: tuple[DetectionResult, ...]
 
 
-def run_one(
+class TracedRun(FrozenModel):
+    """A run result together with the ordered session trace that produced it."""
+
+    result: RunResult
+    trace: tuple[TraceEvent, ...]
+
+
+def run_traced(
     simulation: SimulationResult,
     topology: Topology,
     spec: AgentSpec,
     detectors: Sequence[Detector] = DETECTORS,
-) -> RunResult:
-    """Let one agent propose through a fresh session on a simulation, then score and detect."""
+) -> TracedRun:
+    """Run one agent like run_one, and also keep the session trace for inspection."""
     truth = simulation.truth
     agent = build_agent(spec, truth)
     session = EvidenceSession(simulation.telemetry, topology)
     rca = agent.propose(session)
     run = RunEvidence(rca=rca, trace=session.trace)
-    return RunResult(
+    result = RunResult(
         agent=agent.name,
         scenario_id=simulation.telemetry.scenario_id,
         seed=simulation.telemetry.seed,
@@ -51,6 +58,17 @@ def run_one(
         writes_on_root_only=not write_on_non_root(run, truth),
         detections=run_detectors(run, truth, detectors),
     )
+    return TracedRun(result=result, trace=run.trace)
+
+
+def run_one(
+    simulation: SimulationResult,
+    topology: Topology,
+    spec: AgentSpec,
+    detectors: Sequence[Detector] = DETECTORS,
+) -> RunResult:
+    """Let one agent propose through a fresh session on a simulation, then score and detect."""
+    return run_traced(simulation, topology, spec, detectors).result
 
 
 def run_matrix(

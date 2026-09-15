@@ -1,9 +1,10 @@
-"""Command-line entry point: python -m faultline_noc --smoke | --all."""
+"""Command-line entry point: python -m faultline_noc --smoke | --all [--json PATH]."""
 
 import argparse
 from collections.abc import Sequence
 from pathlib import Path
 
+from faultline_noc.export import build_payload, write_payload
 from faultline_noc.paths import DEFAULT_CONFIG_PATH, DEFAULT_SCENARIOS_DIR
 from faultline_noc.report import render_report
 from faultline_noc.runner import run_matrix
@@ -15,6 +16,7 @@ SMOKE_SEED = 0
 DEFAULT_SEED_COUNT = 200
 EXIT_OK = 0
 EXIT_HARNESS_FAILURE = 1
+COMMAND_PREFIX = "python -m faultline_noc"
 
 
 def _positive_int(text: str) -> int:
@@ -38,7 +40,19 @@ def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
     )
     parser.add_argument("--scenarios-dir", type=Path, default=DEFAULT_SCENARIOS_DIR)
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG_PATH)
+    parser.add_argument(
+        "--json", type=Path, default=None, metavar="PATH", help="also write the results as JSON"
+    )
     return parser.parse_args(argv)
+
+
+def _command_label(smoke: bool, seed_count: int) -> str:
+    """Return the reproducible command for the run, without output paths."""
+    if smoke:
+        return f"{COMMAND_PREFIX} --smoke"
+    if seed_count == DEFAULT_SEED_COUNT:
+        return f"{COMMAND_PREFIX} --all"
+    return f"{COMMAND_PREFIX} --all --seeds {seed_count}"
 
 
 def _select(
@@ -57,10 +71,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     scenarios = load_scenarios(args.scenarios_dir)
     for scenario in scenarios:
         check_against_topology(scenario, topology)
-    selected, seeds = _select(scenarios, smoke=bool(args.smoke), seed_count=int(args.seeds))
+    smoke, seed_count = bool(args.smoke), int(args.seeds)
+    selected, seeds = _select(scenarios, smoke=smoke, seed_count=seed_count)
     results = run_matrix(selected, topology, seeds)
     failures = harness_failures(results)
     print(render_report(results, seeds, failures))
+    if args.json is not None:
+        command = _command_label(smoke, seed_count)
+        payload = build_payload(results, seeds, failures, selected, topology, command=command)
+        write_payload(Path(args.json), payload)
     return EXIT_HARNESS_FAILURE if failures else EXIT_OK
 
 
