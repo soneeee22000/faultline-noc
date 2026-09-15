@@ -4,6 +4,9 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   checks:
     runs-on: ubuntu-latest
@@ -28,4 +31,27 @@ jobs:
       - name: Smoke run
         run: python -m faultline_noc --smoke
       - name: Full matrix
-        run: python -m faultline_noc --all
+        run: python -m faultline_noc --all --json "$RUNNER_TEMP/results.json"
+      - name: Committed results.json matches a fresh run
+        run: diff -u site/src/data/results.json "$RUNNER_TEMP/results.json"
+
+  site:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Test
+        run: npm test
+      - name: Build
+        run: npm run build

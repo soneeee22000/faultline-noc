@@ -1,0 +1,349 @@
+/* Section 6: terminal replay and trace viewer. */
+.backend {
+  display: grid;
+  gap: var(--space-8);
+  min-inline-size: 0;
+}
+
+/* Terminal replay */
+.terminal {
+  min-inline-size: 0;
+  overflow: hidden;
+  border-radius: var(--radius-panel);
+  background: var(--c-sunken);
+  box-shadow: var(--shadow-panel);
+}
+
+.terminal__tabs {
+  display: flex;
+  overflow-x: auto;
+  border-block-end: 1px solid var(--c-line);
+}
+
+.terminal__tab {
+  min-block-size: var(--touch-min);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-block-end: 2px solid transparent;
+  background: transparent;
+  color: var(--c-ink-muted);
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.terminal__tab code {
+  color: inherit;
+  font-size: var(--text-sm);
+}
+
+.terminal__tab[aria-selected="true"] {
+  border-block-end-color: var(--c-signal);
+  color: var(--c-ink);
+}
+
+.terminal__bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-block-end: 1px solid var(--c-line);
+}
+
+.terminal__label {
+  font-size: var(--text-sm);
+}
+
+.terminal__label code {
+  font-size: var(--text-sm);
+}
+
+.terminal__meta,
+.terminal__footer {
+  color: var(--c-ink-muted);
+  font-size: var(--text-sm);
+}
+
+.terminal__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.terminal__body {
+  block-size: calc(
+    var(--term-lines) * var(--term-font) * var(--leading-code) + 2 *
+      var(--space-4)
+  );
+  overflow: auto;
+  padding-block: var(--space-4);
+}
+
+.terminal__pre {
+  inline-size: max-content;
+  min-inline-size: 100%;
+  margin: 0;
+  color: var(--c-ink);
+  font-family: var(--font-mono);
+  font-size: var(--term-font);
+  font-stretch: var(--width-code-condensed);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--leading-code);
+  white-space: pre;
+}
+
+.term-line {
+  display: flex;
+  min-block-size: calc(var(--leading-code) * 1em);
+}
+
+.term-gutter {
+  display: inline-flex;
+  flex: none;
+  justify-content: center;
+  align-items: center;
+  inline-size: var(--space-6);
+}
+
+.term-gutter .icon {
+  inline-size: 1.1em;
+  block-size: 1.1em;
+}
+
+.gutter-icon--pass {
+  color: var(--c-pass);
+}
+
+.gutter-icon--fail {
+  color: var(--c-trip);
+}
+
+.term-text {
+  padding-inline-end: var(--space-4);
+  white-space: pre;
+}
+
+.term-prompt {
+  color: var(--c-ink-muted);
+}
+
+.term-caret {
+  display: inline-block;
+  inline-size: 0.6em;
+  block-size: 1.1em;
+  margin-inline-start: 2px;
+  background: var(--c-ink);
+  vertical-align: text-bottom;
+}
+
+.terminal__footer {
+  padding: var(--space-3) var(--space-4);
+  border-block-start: 1px solid var(--c-line);
+}
+
+/* Trace viewer */
+.trace {
+  display: grid;
+  gap: var(--space-4);
+  min-inline-size: 0;
+  margin: 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-panel);
+  background: var(--c-sunken);
+  box-shadow: var(--shadow-panel);
+  font-size: var(--text-base);
+}
+
+.trace__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  padding-block-end: var(--space-3);
+  border-block-end: 1px solid var(--c-line);
+  font-size: var(--text-sm);
+}
+
+.trace__injected {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.trace__switcher {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.segmented {
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 0 0 1px var(--c-line-strong);
+}
+
+.segmented__button {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  min-block-size: var(--touch-min);
+  padding: var(--space-1) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--c-ink-muted);
+  font: inherit;
+  font-size: var(--text-base);
+  cursor: pointer;
+}
+
+.segmented__button code {
+  color: inherit;
+}
+
+.segmented__button[aria-pressed="true"] {
+  background: var(--c-signal-wash);
+  box-shadow: 0 0 0 1px var(--c-signal);
+  color: var(--c-ink);
+}
+
+.trace__diff {
+  color: var(--c-ink-muted);
+  font-size: var(--text-sm);
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trace__row {
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-3);
+  border-block-end: 1px solid var(--c-line);
+}
+
+.trace__row:last-child {
+  border-block-end: 0;
+}
+
+.trace__row:first-child .trace__label:empty {
+  display: none;
+}
+
+.trace__label {
+  color: var(--c-ink-muted);
+  font-size: var(--text-sm);
+  font-stretch: var(--width-label);
+  font-weight: var(--weight-label);
+}
+
+.trace__cell {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+  min-inline-size: 0;
+  font-size: var(--text-sm);
+}
+
+@media (max-width: 47.99rem) {
+  .trace[data-show="0"] .trace__cell[data-col="1"],
+  .trace[data-show="1"] .trace__cell[data-col="0"] {
+    display: none;
+  }
+}
+
+.trace__agent {
+  font-size: var(--text-base);
+}
+
+.trace-list {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trace-read,
+.trace-action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+
+.trace-read__order {
+  color: var(--c-ink-muted);
+}
+
+.trace-read__sub {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding-inline-start: var(--space-5);
+}
+
+.trace-action--trip > code {
+  color: var(--c-trip);
+}
+
+.trace-detection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 var(--space-3);
+}
+
+.trace-pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.trace__summary {
+  font-size: var(--text-base);
+}
+
+@media (min-width: 48rem) {
+  .trace {
+    padding: var(--space-5);
+  }
+
+  .trace__switcher {
+    display: none;
+  }
+
+  .trace__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2) var(--space-5);
+  }
+
+  .trace__label {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 90rem) {
+  .trace__row {
+    grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .trace__label {
+    grid-column: auto;
+  }
+
+  .trace__row:first-child .trace__label:empty {
+    display: block;
+  }
+}

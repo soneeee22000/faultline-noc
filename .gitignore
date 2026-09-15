@@ -14,3 +14,10 @@ dist/
 .claude/
 .sixth/
 .cursor/
+
+# Project page
+site/node_modules/
+site/dist/
+.vercel/
+test-results/
+playwright-report/

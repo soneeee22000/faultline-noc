@@ -1,0 +1,411 @@
+/* Section 5: harness badge, bar charts with Wilson whiskers, detection matrix, caveats. */
+.results {
+  display: grid;
+  gap: var(--space-7);
+  min-inline-size: 0;
+}
+
+.results__charts {
+  display: grid;
+  gap: var(--space-7);
+}
+
+.badge {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  min-block-size: var(--touch-min);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-mark);
+}
+
+.badge--pass {
+  background: var(--c-pass-wash);
+  color: var(--c-pass);
+}
+
+.badge--fail {
+  background: var(--c-trip-wash);
+  color: var(--c-trip);
+}
+
+.badge__label {
+  font-stretch: var(--width-label);
+  font-weight: var(--weight-label);
+}
+
+.badge__sub {
+  color: var(--c-ink);
+  font-size: var(--text-sm);
+}
+
+/* Bar charts */
+.bar-chart {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.bar-chart__head {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.bar-chart__desc {
+  color: var(--c-ink-muted);
+  font-size: var(--text-sm);
+}
+
+.bar-chart__plot {
+  position: relative;
+}
+
+.bar-chart__grid {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+.grid-line {
+  stroke: var(--c-line);
+  stroke-width: 1;
+}
+
+.grid-baseline {
+  stroke: var(--c-line-strong);
+  stroke-width: 1;
+}
+
+.bar-list {
+  position: relative;
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bar-row {
+  display: grid;
+  gap: var(--space-1);
+  max-inline-size: none;
+  min-block-size: var(--touch-min);
+  padding-block: var(--space-1) var(--space-3);
+}
+
+.bar-row:focus-visible {
+  outline-offset: 0;
+}
+
+/* Name and values in two columns, so values stay right-aligned when a long agent name wraps. */
+.bar-row__label {
+  display: grid;
+  grid-template-columns: minmax(min(9rem, 40%), 1fr) auto;
+  align-items: baseline;
+  gap: 0 var(--space-3);
+  border-radius: var(--radius-cell);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  transition: background-color var(--dur-instant) var(--ease-enter);
+}
+
+.bar-row:hover .bar-row__label,
+.bar-row:focus-visible .bar-row__label {
+  background: var(--c-signal-wash);
+}
+
+.bar-row__label code {
+  min-inline-size: 0;
+  font-size: var(--text-sm);
+}
+
+.bar-row__values {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0 var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-code);
+  font-variant-numeric: tabular-nums;
+}
+
+.bar-row__values strong {
+  font-weight: var(--weight-label);
+}
+
+.bar-row__interval {
+  color: var(--c-ink-muted);
+}
+
+.bar-row__bar {
+  display: block;
+  overflow: visible;
+}
+
+.whisker {
+  stroke: var(--c-ink);
+  stroke-width: 1.5;
+}
+
+.whisker-halo {
+  stroke: var(--c-raised);
+  stroke-width: 4;
+}
+
+.bar-divider {
+  position: relative;
+  max-inline-size: none;
+  margin-block: var(--space-2);
+  padding-block: var(--space-2);
+  border-block-start: 1px solid var(--c-line-strong);
+  background: var(--c-ground);
+  color: var(--c-ink-muted);
+  font-size: var(--text-sm);
+}
+
+.bar-axis {
+  position: relative;
+  block-size: var(--space-5);
+  color: var(--c-ink-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.bar-axis__tick {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: var(--at);
+  transform: translateX(-50%);
+}
+
+.bar-axis__tick:first-child {
+  transform: none;
+}
+
+.bar-axis__tick:last-child {
+  transform: translateX(-100%);
+}
+
+.bar-chart > .button,
+.matrix .button {
+  justify-self: start;
+}
+
+/* Tables */
+.table-scroll {
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+
+.data-table {
+  min-inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table th,
+.data-table td {
+  padding: var(--space-2) var(--space-3);
+  border-block-end: 1px solid var(--c-line);
+  text-align: start;
+  white-space: nowrap;
+}
+
+.data-table td {
+  font-family: var(--font-mono);
+}
+
+/* Detection matrix */
+.matrix {
+  display: grid;
+  gap: var(--space-4);
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.matrix__head {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.heat-legend {
+  display: grid;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.heat-legend__caption,
+.matrix__hint {
+  color: var(--c-ink-muted);
+  font-size: var(--text-sm);
+}
+
+.heat-legend__scale {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.heat-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.heat-legend__swatch {
+  inline-size: 1.5rem;
+  block-size: 1rem;
+  border-radius: var(--radius-cell);
+  box-shadow: 0 0 0 1px var(--c-line);
+}
+
+.matrix__note {
+  font-size: var(--text-sm);
+}
+
+.matrix__table {
+  border-collapse: separate;
+  border-spacing: 2px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.matrix__table thead th {
+  max-inline-size: 7rem;
+  padding: var(--space-2) var(--space-1);
+  color: var(--c-ink-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-body);
+  line-height: var(--leading-snug);
+  text-align: center;
+  vertical-align: bottom;
+}
+
+.matrix__table thead th code {
+  color: var(--c-ink-muted);
+  font-size: var(--text-xs);
+}
+
+.matrix__table tbody th,
+.matrix__corner {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: var(--z-stack);
+  max-inline-size: 10rem;
+  padding-inline-end: var(--space-3);
+  background: var(--c-ground);
+  font-weight: var(--weight-body);
+  text-align: start;
+}
+
+.matrix__corner {
+  font-family: var(--font-sans);
+  vertical-align: bottom;
+}
+
+.matrix__table tbody th code {
+  font-size: var(--text-code);
+}
+
+.matrix__divider th {
+  position: static;
+  max-inline-size: none;
+  padding-block: var(--space-3) var(--space-1);
+  color: var(--c-ink-muted);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+}
+
+.heat {
+  min-inline-size: 4.5rem;
+  block-size: var(--touch-min);
+  border-radius: var(--radius-cell);
+  font-size: var(--text-code);
+  text-align: center;
+}
+
+.heat--0 {
+  background: var(--c-heat-0);
+}
+
+.heat--1 {
+  background: var(--c-heat-1);
+}
+
+.heat--2 {
+  background: var(--c-heat-2);
+}
+
+.heat--3 {
+  background: var(--c-heat-3);
+}
+
+.heat--4 {
+  background: var(--c-heat-4);
+}
+
+.heat-tone--muted {
+  color: var(--c-ink-muted);
+}
+
+.heat-tone--ink {
+  color: var(--c-ink);
+}
+
+.heat-tone--ground {
+  color: var(--c-ground);
+}
+
+.heat.is-highlighted {
+  outline: 1px solid var(--c-signal);
+  outline-offset: -1px;
+}
+
+.heat:focus-visible {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 2px;
+}
+
+/* Caveats */
+.caveats {
+  display: grid;
+  gap: var(--space-3);
+  max-inline-size: var(--measure);
+}
+
+.caveats strong {
+  font-weight: var(--weight-label);
+}
+
+@media (min-width: 90rem) {
+  .results__charts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6);
+  }
+
+  /* Share row tracks across both charts, so an agent's row sits at the same height in each. */
+  .results__charts > .bar-chart {
+    grid-row: span 5;
+    grid-template-rows: subgrid;
+  }
+
+  .matrix__hint {
+    display: none;
+  }
+
+  .heat {
+    min-inline-size: 5.5rem;
+  }
+
+  .matrix__table tbody th {
+    max-inline-size: none;
+    white-space: nowrap;
+  }
+}
