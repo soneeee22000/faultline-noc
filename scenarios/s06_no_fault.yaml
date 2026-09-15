@@ -1,0 +1,10 @@
+id: s06_no_fault
+title: No-fault control with background noise only, where the right answer is insufficient evidence
+ticks: 30
+noise:
+  warning_alarm_rate: 0.08
+  major_alarm_rate: 0.01
+  info_log_rate: 0.3
+expected:
+  root_cause_nf: null
+  fault_class: insufficient_evidence

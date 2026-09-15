@@ -1,0 +1,56 @@
+[build-system]
+requires = ["hatchling==1.32.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "faultline-noc"
+version = "0.1.0"
+description = "Seeded 5G SA core fault simulator and a deterministic evaluation harness for RCA agents (mock agents only)."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic==2.13.5",
+    "pyyaml==6.0.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "hypothesis==6.168.0",
+    "mypy==2.3.1",
+    "pytest==9.1.1",
+    "ruff==0.16.7",
+    "types-PyYAML==6.0.12.20260906",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["faultline_noc"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.mypy]
+strict = true
+python_version = "3.11"
+plugins = ["pydantic.mypy"]
+files = ["faultline_noc", "tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "C90", "PL", "D", "ANN", "RUF"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 8
+
+[tool.ruff.lint.pylint]
+max-args = 6
+max-statements = 30
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["PLR2004"]

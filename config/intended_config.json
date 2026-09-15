@@ -1,0 +1,147 @@
+{
+  "source_note": "Synthetic export shaped like the NetBox REST API (dcim/devices, dcim/interfaces, dcim/cables). Hand-written for this simulator, not pulled from a real NetBox instance.",
+  "devices": [
+    {
+      "id": 1,
+      "name": "gnb-1",
+      "role": { "slug": "ran-gnb" },
+      "site": { "slug": "lab-site-1" },
+      "status": { "value": "active" },
+      "custom_fields": { "nf_kind": "gnb" }
+    },
+    {
+      "id": 2,
+      "name": "amf-1",
+      "role": { "slug": "core-control-plane" },
+      "site": { "slug": "lab-site-1" },
+      "status": { "value": "active" },
+      "custom_fields": { "nf_kind": "amf" }
+    },
+    {
+      "id": 3,
+      "name": "smf-1",
+      "role": { "slug": "core-control-plane" },
+      "site": { "slug": "lab-site-1" },
+      "status": { "value": "active" },
+      "custom_fields": { "nf_kind": "smf" }
+    },
+    {
+      "id": 4,
+      "name": "upf-1",
+      "role": { "slug": "core-user-plane" },
+      "site": { "slug": "lab-site-1" },
+      "status": { "value": "active" },
+      "custom_fields": { "nf_kind": "upf" }
+    },
+    {
+      "id": 5,
+      "name": "nrf-1",
+      "role": { "slug": "core-control-plane" },
+      "site": { "slug": "lab-site-1" },
+      "status": { "value": "active" },
+      "custom_fields": { "nf_kind": "nrf" }
+    },
+    {
+      "id": 6,
+      "name": "rtr-1",
+      "role": { "slug": "transport-router" },
+      "site": { "slug": "lab-site-1" },
+      "status": { "value": "active" },
+      "custom_fields": { "nf_kind": "router" }
+    }
+  ],
+  "interfaces": [
+    {
+      "id": 101,
+      "device": { "name": "gnb-1" },
+      "name": "eth0",
+      "enabled": true
+    },
+    {
+      "id": 102,
+      "device": { "name": "amf-1" },
+      "name": "eth0",
+      "enabled": true
+    },
+    {
+      "id": 103,
+      "device": { "name": "smf-1" },
+      "name": "eth0",
+      "enabled": true
+    },
+    {
+      "id": 104,
+      "device": { "name": "upf-1" },
+      "name": "eth0",
+      "enabled": true
+    },
+    {
+      "id": 105,
+      "device": { "name": "nrf-1" },
+      "name": "eth0",
+      "enabled": true
+    },
+    {
+      "id": 106,
+      "device": { "name": "rtr-1" },
+      "name": "et-0/0/1",
+      "enabled": true
+    },
+    {
+      "id": 107,
+      "device": { "name": "rtr-1" },
+      "name": "et-0/0/2",
+      "enabled": true
+    },
+    {
+      "id": 108,
+      "device": { "name": "rtr-1" },
+      "name": "et-0/0/3",
+      "enabled": true
+    },
+    {
+      "id": 109,
+      "device": { "name": "rtr-1" },
+      "name": "et-0/0/4",
+      "enabled": true
+    },
+    {
+      "id": 110,
+      "device": { "name": "rtr-1" },
+      "name": "et-0/0/5",
+      "enabled": true
+    }
+  ],
+  "cables": [
+    {
+      "id": 201,
+      "a_terminations": [{ "device": "gnb-1", "interface": "eth0" }],
+      "b_terminations": [{ "device": "rtr-1", "interface": "et-0/0/1" }],
+      "status": { "value": "connected" }
+    },
+    {
+      "id": 202,
+      "a_terminations": [{ "device": "amf-1", "interface": "eth0" }],
+      "b_terminations": [{ "device": "rtr-1", "interface": "et-0/0/2" }],
+      "status": { "value": "connected" }
+    },
+    {
+      "id": 203,
+      "a_terminations": [{ "device": "smf-1", "interface": "eth0" }],
+      "b_terminations": [{ "device": "rtr-1", "interface": "et-0/0/3" }],
+      "status": { "value": "connected" }
+    },
+    {
+      "id": 204,
+      "a_terminations": [{ "device": "upf-1", "interface": "eth0" }],
+      "b_terminations": [{ "device": "rtr-1", "interface": "et-0/0/4" }],
+      "status": { "value": "connected" }
+    },
+    {
+      "id": 205,
+      "a_terminations": [{ "device": "nrf-1", "interface": "eth0" }],
+      "b_terminations": [{ "device": "rtr-1", "interface": "et-0/0/5" }],
+      "status": { "value": "connected" }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+id: s05_transport_flap
+title: Transport link flap that raises alarms on several NFs while the root cause is the router
+ticks: 30
+noise:
+  warning_alarm_rate: 0.08
+  major_alarm_rate: 0.01
+  info_log_rate: 0.3
+fault:
+  kind: transport_flap
+  target: rtr-1
+  start_tick: 10
+  period: 5
+  down_ticks: 1
+expected:
+  root_cause_nf: rtr-1
+  fault_class: transport_flap
