@@ -34,6 +34,10 @@ jobs:
         run: python -m faultline_noc --all --json "$RUNNER_TEMP/results.json"
       - name: Committed results.json matches a fresh run
         run: diff -u site/src/data/results.json "$RUNNER_TEMP/results.json"
+      - name: LLM evaluation, replayed from the committed cassettes
+        run: python -m faultline_noc.llm --replay --seeds 3 --json "$RUNNER_TEMP/llm_results.json"
+      - name: Committed llm_results.json matches the replay
+        run: diff -u site/src/data/llm_results.json "$RUNNER_TEMP/llm_results.json"
 
   site:
     runs-on: ubuntu-latest

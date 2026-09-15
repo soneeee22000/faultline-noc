@@ -21,3 +21,7 @@ site/dist/
 .vercel/
 test-results/
 playwright-report/
+
+# Local secrets
+.env
+.env.*
