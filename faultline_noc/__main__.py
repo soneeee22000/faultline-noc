@@ -11,9 +11,8 @@ from faultline_noc.scenario import Scenario, check_against_topology, load_scenar
 from faultline_noc.scoring import harness_failures
 from faultline_noc.topology import build_topology, load_intended_config
 
-SMOKE_SCENARIO_ID = "s01_upf_crashloop"
 SMOKE_SEED = 0
-DEFAULT_SEED_COUNT = 20
+DEFAULT_SEED_COUNT = 200
 EXIT_OK = 0
 EXIT_HARNESS_FAILURE = 1
 
@@ -31,7 +30,7 @@ def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(prog="faultline_noc", description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument(
-        "--smoke", action="store_true", help=f"{SMOKE_SCENARIO_ID} at seed {SMOKE_SEED}"
+        "--smoke", action="store_true", help=f"every scenario at seed {SMOKE_SEED} only"
     )
     mode.add_argument("--all", action="store_true", help="every scenario at every seed")
     parser.add_argument(
@@ -45,9 +44,9 @@ def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
 def _select(
     scenarios: Sequence[Scenario], smoke: bool, seed_count: int
 ) -> tuple[tuple[Scenario, ...], tuple[int, ...]]:
-    """Return the scenarios and seeds for the chosen mode."""
+    """Return the scenarios and seeds for the mode; smoke keeps every scenario at one seed."""
     if smoke:
-        return tuple(s for s in scenarios if s.id == SMOKE_SCENARIO_ID), (SMOKE_SEED,)
+        return tuple(scenarios), (SMOKE_SEED,)
     return tuple(scenarios), tuple(range(seed_count))
 
 
@@ -59,8 +58,6 @@ def main(argv: Sequence[str] | None = None) -> int:
     for scenario in scenarios:
         check_against_topology(scenario, topology)
     selected, seeds = _select(scenarios, smoke=bool(args.smoke), seed_count=int(args.seeds))
-    if not selected:
-        raise SystemExit(f"scenario {SMOKE_SCENARIO_ID} not found in {args.scenarios_dir}")
     results = run_matrix(selected, topology, seeds)
     failures = harness_failures(results)
     print(render_report(results, seeds, failures))

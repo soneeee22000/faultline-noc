@@ -159,7 +159,7 @@ class RCA(FrozenModel):
 
 
 class GroundTruth(FrozenModel):
-    """What the injector actually did in a run; hidden from every agent except the oracle."""
+    """What the injector actually did in a run; given only to the allowlisted oracle and mutants."""
 
     root_cause_nf: str | None
     fault_class: FaultClass

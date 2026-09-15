@@ -11,6 +11,7 @@ MIN_FAULT_SEVERITY = Severity.MAJOR
 MIN_ALARMS_PER_NODE = 2
 MIN_ALARMING_NODES = 2
 INSUFFICIENT_CONFIDENCE = 0.5
+NON_SERVICE_AFFECTING_CODES: frozenset[str] = frozenset({"NTP_OFFSET_HIGH"})
 ALARM_CODE_FAULTS: dict[str, FaultClass] = {
     "NF_PROCESS_RESTART": FaultClass.NF_CRASHLOOP,
     "LINK_FLAP": FaultClass.TRANSPORT_FLAP,
@@ -20,7 +21,8 @@ ALARM_CODE_FAULTS: dict[str, FaultClass] = {
 class RuleBaseline:
     """Blames the most upstream node with repeated serious alarms.
 
-    A node is alarming when it has at least MIN_ALARMS_PER_NODE alarms at major or above.
+    A node is alarming when it has at least MIN_ALARMS_PER_NODE alarms at major or above whose
+    code its alarm catalog does not mark as non-service-affecting.
     A fault is declared only when at least MIN_ALARMING_NODES nodes are alarming. Among the
     alarming nodes whose providers and transport are quiet, the one that explains the most
     other alarming nodes wins. It reads topology and alarms only, never logs.
@@ -51,14 +53,20 @@ class RuleBaseline:
 
 
 def _alarming_nodes(alarms: Sequence[Alarm]) -> dict[str, tuple[Alarm, ...]]:
-    """Group serious alarms by node, keeping nodes with repeated serious alarms."""
+    """Group serious, service-affecting alarms by node, keeping nodes with repeated ones."""
     grouped: dict[str, list[Alarm]] = {}
     for alarm in alarms:
-        if alarm.severity.rank >= MIN_FAULT_SEVERITY.rank:
+        if _is_service_affecting(alarm):
             grouped.setdefault(alarm.node, []).append(alarm)
     return {
         node: tuple(items) for node, items in grouped.items() if len(items) >= MIN_ALARMS_PER_NODE
     }
+
+
+def _is_service_affecting(alarm: Alarm) -> bool:
+    """Return True for an alarm at major or above whose code is not catalogued as benign."""
+    serious = alarm.severity.rank >= MIN_FAULT_SEVERITY.rank
+    return serious and alarm.code not in NON_SERVICE_AFFECTING_CODES
 
 
 def _pick_root(alarming: dict[str, tuple[Alarm, ...]], topology: Topology) -> str | None:

@@ -10,9 +10,9 @@ ACTIVE_CABLE_STATUS = "connected"
 KIND_DEPENDENCIES: tuple[tuple[NodeKind, NodeKind, Interface, str], ...] = (
     (NodeKind.GNB, NodeKind.AMF, Interface.N2, "TS 23.501 4.2.7"),
     (NodeKind.GNB, NodeKind.UPF, Interface.N3, "TS 23.501 4.2.7"),
-    (NodeKind.AMF, NodeKind.SMF, Interface.N11, "TS 23.501 4.2.7, 6.3.2"),
+    (NodeKind.AMF, NodeKind.SMF, Interface.N11, "TS 23.501 4.2.7"),
     (NodeKind.SMF, NodeKind.UPF, Interface.N4, "TS 23.501 4.2.7, 6.3.3.2; TS 29.244 1"),
-    (NodeKind.AMF, NodeKind.NRF, Interface.NNRF, "TS 23.501 4.2.6, 6.3.1"),
+    (NodeKind.AMF, NodeKind.NRF, Interface.NNRF, "TS 23.501 4.2.6, 6.3.1, 6.3.2"),
     (NodeKind.SMF, NodeKind.NRF, Interface.NNRF, "TS 23.501 4.2.6, 6.3.1"),
 )
 

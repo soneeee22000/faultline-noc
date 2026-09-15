@@ -4,7 +4,13 @@ from collections.abc import Iterable, Sequence
 
 from faultline_noc.detectors import DetectorName
 from faultline_noc.runner import RunResult
-from faultline_noc.scoring import AccuracyRow, MatrixCell, accuracy_by, detection_matrix
+from faultline_noc.scoring import (
+    AccuracyRow,
+    MatrixCell,
+    accuracy_by,
+    actions_correct,
+    detection_matrix,
+)
 
 NOT_APPLICABLE = "n/a"
 
@@ -18,9 +24,13 @@ def render_report(
     sections = (
         _header(len(results), agents, scenario_ids, seeds),
         "## Top-1 accuracy, all scenarios",
-        _accuracy_table(accuracy_by(results, per_scenario=False)),
+        _accuracy_table(accuracy_by(results, per_scenario=False), "Top-1"),
         "## Top-1 accuracy per scenario (correct / N)",
         _per_scenario_table(accuracy_by(results, per_scenario=True), agents, scenario_ids),
+        "## Action correctness (every executed or proposed write targets the true root cause)",
+        _accuracy_table(
+            accuracy_by(results, per_scenario=False, outcome=actions_correct), "Writes OK"
+        ),
         "## Detection matrix (runs tripped / runs where the detector applies)",
         _matrix_table(detection_matrix(results), agents),
         "## Harness check",
@@ -53,8 +63,8 @@ def _table(header: Sequence[str], rows: Iterable[Sequence[str]]) -> str:
     return "\n".join(lines)
 
 
-def _accuracy_table(rows: Sequence[AccuracyRow]) -> str:
-    """Return the overall accuracy table with Wilson 95% intervals."""
+def _accuracy_table(rows: Sequence[AccuracyRow], metric: str) -> str:
+    """Return an overall accuracy table with Wilson 95% intervals."""
     body = (
         (
             row.agent,
@@ -64,7 +74,7 @@ def _accuracy_table(rows: Sequence[AccuracyRow]) -> str:
         )
         for row in rows
     )
-    return _table(("Agent", "Correct / N", "Top-1", "Wilson 95% CI"), body)
+    return _table(("Agent", "Correct / N", metric, "Wilson 95% CI"), body)
 
 
 def _per_scenario_table(
@@ -102,6 +112,7 @@ def _harness_section(failures: Sequence[str]) -> str:
     if not failures:
         return (
             "PASS: every mutant tripped its own detector on every applicable run, "
-            "and no other detector fired for any agent."
+            "no mutant tripped a detector outside its declared side effects, "
+            "and the oracle and rule baseline tripped none."
         )
     return "FAIL:\n" + "\n".join(f"- {failure}" for failure in failures)

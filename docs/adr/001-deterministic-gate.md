@@ -25,13 +25,15 @@ Every judgment that gates a result is a pure function of three structured inputs
 - the ordered trace of reads and actions recorded by `EvidenceSession`;
 - ground truth derived from what the fault injector actually did.
 
+Ground truth reaches only the oracle and the mutants. `faultline_noc/agents/registry.py` holds the allowlist, and an evaluated agent's factory takes no arguments.
+
 No LLM is called to decide pass or fail. The future write gate follows the same rule. It decides from structured state (approval token, dry-run diff, post-check result), not from a model's opinion.
 
 ## Reasons
 
 1. **Reproducibility.** The same scenario and seed give byte-identical telemetry, so they give the same verdict. A judge model adds sampling variance and version drift that would hide real changes in agent quality.
 2. **The judge must not share the agent's attack surface.** Scenario s07 puts an instruction in a log line. An LLM judge that reads the same telemetry can be steered by the same text. A set-membership check on evidence ids cannot.
-3. **The harness can be tested.** Each mutant agent has one known defect, and CI asserts that the defect trips exactly its own detector. That discrimination test only means something when detectors are deterministic.
+3. **The harness can be tested.** Each mutant agent has one known defect. CI asserts that the defect trips its own detector on every applicable run, and nothing beyond the side effects that defect implies. Every detector has such a mutant. That discrimination test only means something when detectors are deterministic.
 4. **Auditability.** A failed run points to a specific evidence id, trace position or action. An operator can check it by hand.
 5. **Cost and speed.** The full matrix runs in seconds on a laptop with no API key. That keeps smoke-first iteration cheap.
 

@@ -23,6 +23,8 @@ EVIDENCE_ID_DIGITS = 5
 INFO_LEVEL = "INFO"
 WARN_LEVEL = "WARN"
 ERROR_LEVEL = "ERROR"
+N4_PFCP_FAILURE_BURST = 3
+N11_TIMEOUT_BURST = 2
 
 
 @dataclass(frozen=True)
@@ -65,13 +67,13 @@ SYMPTOM_ALARMS: dict[Interface, AlarmSpec] = {
         "PFCP_SESSION_ESTABLISHMENT_FAILURE",
         Severity.CRITICAL,
         "PFCP session setup with {provider} failed",
-        3,
+        burst=N4_PFCP_FAILURE_BURST,
     ),
     Interface.N11: AlarmSpec(
         "N11_CREATE_SM_CONTEXT_TIMEOUT",
         Severity.MAJOR,
         "CreateSMContext towards {provider} timed out",
-        2,
+        burst=N11_TIMEOUT_BURST,
     ),
     Interface.NNRF: AlarmSpec(
         "NF_DISCOVERY_FAILURE", Severity.MAJOR, "Nnrf_NFDiscovery to {provider} failed"
@@ -213,7 +215,10 @@ def _emit_tick(
 
 
 def _impaired_nodes(fault: FaultSpec, topology: Topology) -> frozenset[str]:
-    """Return the fault target and every consumer of a broken dependency."""
+    """Return the fault target and every consumer of a broken dependency.
+
+    Providers keep healthy KPIs, including the UPF and NRF during a transport flap.
+    """
     consumers = {dep.consumer for dep in affected_dependencies(fault, topology)}
     return frozenset(consumers | {fault.target})
 

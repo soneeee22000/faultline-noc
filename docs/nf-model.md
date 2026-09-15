@@ -8,9 +8,9 @@ Faultline NOC models a minimal 5G standalone core: one gNB, AMF, SMF, UPF and NR
 | -------- | -------- | ---------- | --------------------------------------------------- | ------------------------------------------------------- |
 | gNB      | AMF      | N2         | Control plane between the (R)AN and the AMF         | TS 23.501 clause 4.2.7                                  |
 | gNB      | UPF      | N3         | User plane between the (R)AN and the UPF            | TS 23.501 clause 4.2.7                                  |
-| AMF      | SMF      | N11        | Session management requests from the AMF to the SMF | TS 23.501 clauses 4.2.7 and 6.3.2                       |
+| AMF      | SMF      | N11        | Session management requests from the AMF to the SMF | TS 23.501 clause 4.2.7                                  |
 | SMF      | UPF      | N4         | Session control of the UPF by the SMF, using PFCP   | TS 23.501 clauses 4.2.7 and 6.3.3.2; TS 29.244 clause 1 |
-| AMF      | NRF      | Nnrf (SBI) | NF discovery, for example the AMF finding an SMF    | TS 23.501 clauses 4.2.6 and 6.3.1                       |
+| AMF      | NRF      | Nnrf (SBI) | NF discovery, for example the AMF finding an SMF    | TS 23.501 clauses 4.2.6, 6.3.1 and 6.3.2                |
 | SMF      | NRF      | Nnrf (SBI) | NF discovery, for example the SMF finding a UPF     | TS 23.501 clauses 4.2.6, 6.3.1 and 6.3.3.2              |
 
 The table lives in code as `KIND_DEPENDENCIES` in `faultline_noc/topology.py`. `tests/test_topology.py` fails if the derived graph differs from it.
@@ -23,7 +23,7 @@ The table lives in code as `KIND_DEPENDENCIES` in `faultline_noc/topology.py`. `
   Source: https://itecspec.com/3gpp/23.501/s/4.2.6
 - **Clause 6.3.1, NF and NF service discovery.** Unless NF information is configured locally, discovery goes through the NRF. NF instances register their NF profile with the NRF, and requester NFs query the NRF.
   Source: https://itecspec.com/3gpp/23.501/s/6.3.1
-- **Clause 6.3.2, SMF discovery and selection.** When the AMF does discovery, it uses the NRF to find SMF instances, unless SMF information is available by other means.
+- **Clause 6.3.2, SMF discovery and selection.** When the AMF does discovery, it uses the NRF to find SMF instances, unless SMF information is available by other means. It is cited for the AMF-to-NRF dependency, not for N11.
   Source: https://itecspec.com/3gpp/23.501/s/6.3.2
 - **Clause 6.3.3.2, SMF provisioning of available UPFs.** The SMF may learn about UPFs through local configuration or through a UPF-initiated N4 association. It may optionally use the NRF to discover them.
   Source: https://itecspec.com/3gpp/23.501/s/6.3.3.2
@@ -37,6 +37,8 @@ The table lives in code as `KIND_DEPENDENCIES` in `faultline_noc/topology.py`. `
 - **No SCP, UDM, AUSF, PCF, NSSF or CHF.** Charging over Nchf is out of scope. Diameter Gy is an EPC interface, not a 5GC one, so it does not appear here.
 - **No N1, N6, N9 or roaming.** The UE, the data network and inter-PLMN paths are not modelled.
 - **Symptoms show only on the consumer side, one hop from the fault.** When the UPF is down, the SMF and gNB raise alarms. The AMF does not raise second-order N11 alarms, and providers do not raise their own peer-loss alarms. A real core would show both.
+- **N11 is modelled in one direction only.** The table has the AMF consuming Nsmf. In a real core the SMF also consumes Namf, for example `Namf_Communication_N1N2MessageTransfer`, so the SMF depends on the AMF as well. That edge is left out, so an AMF fault raises no alarms on the SMF.
+- **A transport flap impairs only the router and the consumers.** Every link crosses `rtr-1`, yet during a flap only the router, the gNB, the AMF and the SMF show impaired KPIs and alarms. The UPF and the NRF are providers only, so they keep healthy KPIs and raise no alarms. A real flap would degrade them too.
 - **One transport router carries every link.** The NetBox-shaped `config/intended_config.json` has one cable from each NF to `rtr-1`, and topology building fails if an NF is not cabled to it.
 - **Fault effects are periodic and fully deterministic.** Real crash-loops back off, and real flaps are irregular.
 

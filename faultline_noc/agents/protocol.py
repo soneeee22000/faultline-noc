@@ -1,4 +1,4 @@
-"""The Agent protocol every evaluated agent implements."""
+"""The Agent protocol every evaluated agent implements, and the two factory shapes."""
 
 from collections.abc import Callable
 from typing import Protocol
@@ -17,4 +17,8 @@ class Agent(Protocol):
         ...
 
 
-AgentFactory = Callable[[GroundTruth], Agent]
+AgentFactory = Callable[[], Agent]
+"""Builds an evaluated agent. It takes no arguments, so it cannot receive ground truth."""
+
+TruthAwareFactory = Callable[[GroundTruth], Agent]
+"""Builds a harness control from ground truth. Only allowlisted factories may use this shape."""
