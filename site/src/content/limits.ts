@@ -60,8 +60,7 @@ export const LIMITATIONS: readonly LeadItem[] = [
   },
   {
     lead: "Confidence is not calibrated,",
-    detail:
-      "and only {scenarios} scenarios exist. The harder ones are on the roadmap.",
+    detail: `and this page covers {scenarios} scenarios. Two harder ones live in \`scenarios/hard/\` and are scored in the model comparison ([docs/LLM.md](${repoFile("docs/LLM.md")})).`,
   },
 ];
 
