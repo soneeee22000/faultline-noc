@@ -1,14 +1,20 @@
 """Runs the rule baseline and LLM agents over scenarios and seeds, and builds the report payload."""
 
 import math
-from collections.abc import Sequence
-from dataclasses import dataclass
+from collections.abc import Mapping, Sequence
+from dataclasses import dataclass, field
 from functools import partial
 from pathlib import Path
 from typing import Literal
 
 from faultline_noc.agents import AgentSpec, BlindAgent
 from faultline_noc.agents.baseline import RuleBaseline
+from faultline_noc.export import (
+    SampleTrace,
+    ScenarioSummary,
+    sample_trace,
+    summarise_scenario,
+)
 from faultline_noc.llm.agent import MODEL_PROFILES, LlmAgent, TransportFactory
 from faultline_noc.llm.pricing import SpendTracker
 from faultline_noc.llm.transport import (
@@ -19,7 +25,7 @@ from faultline_noc.llm.transport import (
     Transport,
 )
 from faultline_noc.models import FrozenModel
-from faultline_noc.runner import RunResult, run_traced
+from faultline_noc.runner import RunResult, TracedRun, run_traced
 from faultline_noc.scenario import Scenario
 from faultline_noc.scoring import (
     AccuracyRow,
@@ -28,11 +34,17 @@ from faultline_noc.scoring import (
     actions_correct,
     detection_matrix,
 )
-from faultline_noc.simulator import simulate
+from faultline_noc.simulator import SimulationResult, simulate
 from faultline_noc.topology import Topology
 
 Mode = Literal["record", "replay"]
 SPEND_DECIMALS = 4
+LLM_SAMPLE_SEED = 0
+TraceKey = tuple[str, str]
+LLM_SAMPLE_RUNS: tuple[TraceKey, ...] = (
+    ("s08_smf_crashloop_router_noise", "rule_baseline"),
+    ("s08_smf_crashloop_router_noise", "llm_sonnet_5"),
+)
 
 
 @dataclass(frozen=True)
@@ -44,6 +56,14 @@ class EvalConfig:
     seeds: tuple[int, ...]
     budget_usd: float
     cassettes_dir: Path
+
+
+@dataclass
+class EvalOutcome:
+    """What one evaluation produced: every scored run, and the traces kept for the report."""
+
+    results: list[RunResult] = field(default_factory=list)
+    traces: dict[TraceKey, SampleTrace] = field(default_factory=dict)
 
 
 class LlmEvalPayload(FrozenModel):
@@ -61,6 +81,8 @@ class LlmEvalPayload(FrozenModel):
     accuracy_per_scenario: tuple[AccuracyRow, ...]
     action_correctness: tuple[AccuracyRow, ...]
     detection_matrix: tuple[MatrixCell, ...]
+    sample_scenarios: tuple[ScenarioSummary, ...] = ()
+    sample_traces: tuple[SampleTrace, ...] = ()
 
 
 def new_spend_tracker(config: EvalConfig) -> SpendTracker:
@@ -93,11 +115,26 @@ def agent_specs(config: EvalConfig, spend: SpendTracker) -> tuple[AgentSpec, ...
     return (BlindAgent(RuleBaseline), *llm_agents)
 
 
+def _keep_sample(
+    traced: TracedRun,
+    simulation: SimulationResult,
+    seed: int,
+    traces: dict[TraceKey, SampleTrace],
+) -> None:
+    """Keep this run's trace when the report shows it, so nothing has to be run twice."""
+    result = traced.result
+    if seed != LLM_SAMPLE_SEED or (result.scenario_id, result.agent) not in LLM_SAMPLE_RUNS:
+        return
+    traces[(result.scenario_id, result.agent)] = sample_trace(
+        traced, simulation.truth.injection_evidence_id
+    )
+
+
 def run_evaluation(
     config: EvalConfig,
     scenarios: Sequence[Scenario],
     topology: Topology,
-    results: list[RunResult],
+    outcome: EvalOutcome,
     spend: SpendTracker,
 ) -> None:
     """Append one result per agent, scenario and seed; completed results survive a spend stop."""
@@ -106,16 +143,32 @@ def run_evaluation(
         for seed in config.seeds:
             simulation = simulate(scenario, topology, seed)
             for spec in specs:
-                results.append(run_traced(simulation, topology, spec).result)
+                traced = run_traced(simulation, topology, spec)
+                outcome.results.append(traced.result)
+                _keep_sample(traced, simulation, seed, outcome.traces)
+
+
+def _sample_scenarios(
+    scenarios: Sequence[Scenario],
+    topology: Topology,
+    traces: Mapping[TraceKey, SampleTrace],
+) -> tuple[ScenarioSummary, ...]:
+    """Summarise every scenario a kept trace refers to, in the order the scenarios were run."""
+    needed = {trace.scenario_id for trace in traces.values()}
+    return tuple(
+        summarise_scenario(scenario, topology) for scenario in scenarios if scenario.id in needed
+    )
 
 
 def build_payload(
     config: EvalConfig,
     scenarios: Sequence[Scenario],
-    results: Sequence[RunResult],
+    outcome: EvalOutcome,
     spend: SpendTracker,
+    topology: Topology,
 ) -> LlmEvalPayload:
     """Summarise results into the report payload, rounding spend so replays match records."""
+    results = outcome.results
     return LlmEvalPayload(
         command=f"python -m faultline_noc.llm --replay --seeds {len(config.seeds)}",
         models=config.models,
@@ -132,4 +185,8 @@ def build_payload(
         accuracy_per_scenario=accuracy_by(results, per_scenario=True),
         action_correctness=accuracy_by(results, per_scenario=False, outcome=actions_correct),
         detection_matrix=detection_matrix(results),
+        sample_scenarios=_sample_scenarios(scenarios, topology, outcome.traces),
+        sample_traces=tuple(
+            outcome.traces[key] for key in LLM_SAMPLE_RUNS if key in outcome.traces
+        ),
     )

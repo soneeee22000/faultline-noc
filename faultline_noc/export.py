@@ -146,7 +146,7 @@ def build_payload(
             accuracy_by(results, per_scenario=False, outcome=actions_correct)
         ),
         detection_matrix=detection_matrix(results),
-        scenarios=tuple(_summarise(scenario, topology) for scenario in scenarios),
+        scenarios=tuple(summarise_scenario(scenario, topology) for scenario in scenarios),
         sample_traces=_sample_traces(results, scenarios, topology),
     )
 
@@ -204,7 +204,7 @@ def _rate_rows(rows: Sequence[AccuracyRow]) -> tuple[RateRow, ...]:
     )
 
 
-def _summarise(scenario: Scenario, topology: Topology) -> ScenarioSummary:
+def summarise_scenario(scenario: Scenario, topology: Topology) -> ScenarioSummary:
     """Summarise a scenario from its YAML and the ground truth of its sample seed."""
     truth = simulate(scenario, topology, SAMPLE_SEED).truth
     return ScenarioSummary(
@@ -233,7 +233,7 @@ def _sample_traces(
         traced = run_traced(simulation, topology, _spec_named(agent, simulation.truth))
         if traced.result != scored:
             raise ValueError(f"re-run of {agent} on {scenario_id} differs from the scored run")
-        traces.append(_sample_trace(traced, simulation.truth.injection_evidence_id))
+        traces.append(sample_trace(traced, simulation.truth.injection_evidence_id))
     return tuple(traces)
 
 
@@ -245,7 +245,7 @@ def _spec_named(agent: str, truth: GroundTruth) -> AgentSpec:
     raise KeyError(f"no default agent named {agent!r}")
 
 
-def _sample_trace(traced: TracedRun, injection_evidence_id: str | None) -> SampleTrace:
+def sample_trace(traced: TracedRun, injection_evidence_id: str | None) -> SampleTrace:
     """Return a sample trace, keeping cited and injected ids visible in truncated reads."""
     result = traced.result
     highlighted = frozenset(result.rca.cited_evidence_ids) | {injection_evidence_id}

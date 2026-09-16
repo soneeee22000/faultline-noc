@@ -9,7 +9,13 @@ import pytest
 from faultline_noc.evidence import EventKind, EventSource, EvidenceSession
 from faultline_noc.llm.agent import MODEL_PROFILES, LlmAgent, build_request, clean_content
 from faultline_noc.llm.env import load_env_file
-from faultline_noc.llm.evaluate import EvalConfig, build_payload, run_evaluation
+from faultline_noc.llm.evaluate import (
+    EvalConfig,
+    EvalOutcome,
+    build_payload,
+    new_spend_tracker,
+    run_evaluation,
+)
 from faultline_noc.llm.pricing import BudgetExceededError, SpendTracker, usage_cost_usd
 from faultline_noc.llm.report import render_markdown
 from faultline_noc.llm.tools import ToolExecutor
@@ -21,7 +27,7 @@ from faultline_noc.llm.transport import (
     request_key,
 )
 from faultline_noc.models import FaultClass
-from faultline_noc.runner import RunResult
+from faultline_noc.paths import DEFAULT_CASSETTES_DIR
 from faultline_noc.scenario import Scenario
 from faultline_noc.simulator import simulate
 from faultline_noc.topology import Topology
@@ -248,10 +254,51 @@ def test_baseline_only_evaluation_builds_a_report(
         mode="replay", models=(), seeds=(0,), budget_usd=0.0, cassettes_dir=tmp_path
     )
     selected = (scenarios["s01_upf_crashloop"], hard_scenarios["s09_upf_crashloop_silent"])
-    results: list[RunResult] = []
+    outcome = EvalOutcome()
     spend = SpendTracker(budget_usd=0.0)
-    run_evaluation(config, selected, topology, results, spend)
-    payload = build_payload(config, selected, results, spend)
+    run_evaluation(config, selected, topology, outcome, spend)
+    payload = build_payload(config, selected, outcome, spend, topology)
     assert payload.runs == len(selected)
     assert [row.agent for row in payload.accuracy_overall] == ["rule_baseline"]
     assert "s09_upf_crashloop_silent" in render_markdown(payload)
+
+
+def test_no_sample_traces_when_the_sampled_runs_are_absent(
+    scenarios: dict[str, Scenario], topology: Topology, tmp_path: Path
+) -> None:
+    """A run without the sampled scenario keeps no traces, so the payload stays empty there."""
+    config = EvalConfig(
+        mode="replay", models=(), seeds=(0,), budget_usd=0.0, cassettes_dir=tmp_path
+    )
+    selected = (scenarios["s01_upf_crashloop"],)
+    outcome = EvalOutcome()
+    spend = SpendTracker(budget_usd=0.0)
+    run_evaluation(config, selected, topology, outcome, spend)
+    payload = build_payload(config, selected, outcome, spend, topology)
+    assert payload.sample_traces == ()
+    assert payload.sample_scenarios == ()
+
+
+def test_sample_traces_contrast_the_baseline_with_the_model(
+    hard_scenarios: dict[str, Scenario], topology: Topology
+) -> None:
+    """Replaying s08 keeps the baseline trace and the Sonnet trace, the pair the page compares."""
+    config = EvalConfig(
+        mode="replay",
+        models=("claude-sonnet-5",),
+        seeds=(0,),
+        budget_usd=0.0,
+        cassettes_dir=DEFAULT_CASSETTES_DIR,
+    )
+    selected = (hard_scenarios["s08_smf_crashloop_router_noise"],)
+    outcome = EvalOutcome()
+    spend = new_spend_tracker(config)
+    run_evaluation(config, selected, topology, outcome, spend)
+    payload = build_payload(config, selected, outcome, spend, topology)
+    baseline, sonnet = payload.sample_traces
+    assert (baseline.agent, sonnet.agent) == ("rule_baseline", "llm_sonnet_5")
+    assert baseline.correct is False
+    assert sonnet.correct is True
+    assert sonnet.steps != ()
+    assert [step.index for step in sonnet.steps] == sorted(step.index for step in sonnet.steps)
+    assert [item.id for item in payload.sample_scenarios] == ["s08_smf_crashloop_router_noise"]

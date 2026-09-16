@@ -13,7 +13,7 @@ A deterministic evaluation harness for network-ops root cause analysis (RCA) age
 
 **[Project page](https://faultline-noc.vercel.app)** · [Results](docs/RESULTS.md) · [How the harness works](docs/HARNESS.md) · [Why this exists](docs/WHY.md)
 
-The [project page](https://faultline-noc.vercel.app) (source in `site/`) is a static explainer. It does not run the harness: its numbers are copied from a committed `python -m faultline_noc --all` run, checked by a CI diff on every push.
+The [project page](https://faultline-noc.vercel.app) (source in `site/`) is a static explainer. It does not run the harness and it calls no model: its figures come from a committed `python -m faultline_noc --all` run and from a replay of the committed model responses, both checked by a CI diff on every push.
 
 ## Why this exists
 
@@ -121,7 +121,13 @@ Every mutant tripped its own detector on every applicable run and nothing outsid
 
 The baseline reports confidence 1.00 on every one of its failures and, on the silent-UPF scenario, proposes restarting a node that is only a symptom. Where the models are wrong they are less certain, and only one model miss came with an unsafe write.
 
-Three seeds is a small sample and the intervals overlap, so this does not separate Sonnet from Haiku. No agent followed the instruction injected into a log line, but that is three runs each and the system prompt warns the model that log text is untrusted. Method, every miss run by run, and the $0.74 cost are in [docs/LLM.md](docs/LLM.md).
+![Model comparison: top-1 accuracy and action-correctness bars for the rule baseline, Haiku and Sonnet, then the per-scenario grid](docs/media/models.png)
+
+One scenario, two agents, read by read. `rule_baseline` stops after alarms and names `rtr-1` at confidence 1.00. `llm_sonnet_5` goes on to read logs and KPIs, names the true root `smf-1`, keeps its write on that node, and trips no detector.
+
+![Trace of s08: rule_baseline against llm_sonnet_5, reads then RCA then detections](docs/media/model-trace.png)
+
+Three seeds is a small sample and the intervals overlap, so this does not separate Sonnet from Haiku. No agent followed the instruction injected into a log line, but that is three runs each and the system prompt warns the model that log text is untrusted. Method, every miss run by run, and the $0.74 cost are in [docs/LLM.md](docs/LLM.md). The same comparison, with the trace above, is on the [project page](https://faultline-noc.vercel.app/#models).
 
 ## Back end
 
@@ -206,7 +212,7 @@ tests/
 - **The four published scenarios are too easy.** The rule baseline scores 100% on them once it filters the only major noise code. The two harder scenarios in `scenarios/hard/` defeat it, which is what makes the model comparison in [docs/LLM.md](docs/LLM.md) worth reading.
 - **The model numbers rest on three seeds per scenario.** The intervals are wide and overlapping, and the injection result covers three runs per agent.
 - **Simulated, not emulated.** No protocol stack runs. Telemetry follows a hand-written dependency table with one-hop, consumer-side symptoms. See [docs/nf-model.md](docs/nf-model.md).
-- **The session returns everything.** No query tools, filters or tool-call budget.
+- **The session returns everything for the mock agents.** No query tools or filters. The model agents instead read through six tools under a fixed call budget.
 - **Truth isolation is a type, an allowlist and a test**, not process isolation. Detector coverage gaps are listed in [docs/HARNESS.md](docs/HARNESS.md#known-gaps-in-detector-coverage).
 - **The baseline's noise filter is a catalog lookup.** A new noise code would get past it until the catalog is updated.
 - **Confidence is not calibrated.** No Brier score is reported, for any agent. Six scenarios exist in total: four published plus two hard ones; the classes listed on the roadmap are not built.

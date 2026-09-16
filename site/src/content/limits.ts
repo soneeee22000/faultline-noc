@@ -19,28 +19,31 @@ export const NOT_THIS: readonly LeadItem[] = [
       "No protocol stack runs. The telemetry is synthetic and follows a hand-written dependency table, so nothing here shows how real core telemetry behaves.",
   },
   {
-    lead: "The agents on this page are mocks.",
-    detail: `They are a rule baseline, an oracle and mutants, so these figures show that the harness tells good behaviour from bad, not that any AI works. Claude models are scored by the same detectors in [docs/LLM.md](${repoFile("docs/LLM.md")}).`,
+    lead: "The agents in the results section are mocks.",
+    detail: `They are a rule baseline, an oracle and mutants, so those figures show that the harness tells good behaviour from bad, not that any AI works. Claude models are scored by the same detectors in the model comparison above, and run by run in [docs/LLM.md](${repoFile("docs/LLM.md")}).`,
   },
   {
     lead: "These four scenarios are too easy.",
-    detail: `The rule baseline scores {baseline}. Two harder scenarios defeat it, and they are what make the model comparison in [docs/LLM.md](${repoFile("docs/LLM.md")}) worth reading.`,
+    detail:
+      "The rule baseline scores {baseline}. Two harder scenarios defeat it, and they are what make the model comparison above worth reading.",
   },
   {
-    lead: "This page does not run the harness.",
-    detail: "Its figures are copied from a committed run of `{command}`.",
+    lead: "This page does not run the harness, and it calls no model.",
+    detail:
+      "Its figures are copied from a committed run of `{command}`, and the model numbers from a replay of committed responses.",
   },
 ];
 
 /** Limitations, following the README. */
 export const LIMITATIONS: readonly LeadItem[] = [
   {
-    lead: "It proves the harness discriminates, not that any AI works.",
-    detail: `The agents here are mocks. See [docs/RESULTS.md](${repoFile("docs/RESULTS.md")}).`,
+    lead: "The mock agents prove the harness discriminates, not that any AI works.",
+    detail: `That is what the model comparison above is for. See [docs/RESULTS.md](${repoFile("docs/RESULTS.md")}).`,
   },
   {
     lead: "These four scenarios are too easy.",
-    detail: `The rule baseline scores {baseline} once it filters the only major noise code. It fails both harder scenarios in the model comparison ([docs/LLM.md](${repoFile("docs/LLM.md")})), which rests on three seeds each.`,
+    detail:
+      "The rule baseline scores {baseline} once it filters the only major noise code. It fails both harder scenarios in the model comparison above, which rests on three seeds each.",
   },
   {
     lead: "Simulated, not emulated.",
@@ -48,7 +51,8 @@ export const LIMITATIONS: readonly LeadItem[] = [
   },
   {
     lead: "The session returns everything.",
-    detail: "No query tools, filters or tool-call budget.",
+    detail:
+      "No query tools, filters or tool-call budget, except for the model agents, which read through tools under a budget.",
   },
   {
     lead: "Truth isolation is a type, an allowlist and a test,",
@@ -60,7 +64,8 @@ export const LIMITATIONS: readonly LeadItem[] = [
   },
   {
     lead: "Confidence is not calibrated,",
-    detail: `and this page covers {scenarios} scenarios. Two harder ones live in \`scenarios/hard/\` and are scored in the model comparison ([docs/LLM.md](${repoFile("docs/LLM.md")})).`,
+    detail:
+      "and the results section covers {scenarios} scenarios. Two harder ones live in `scenarios/hard/` and are scored in the model comparison above.",
   },
 ];
 

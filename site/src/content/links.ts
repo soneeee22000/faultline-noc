@@ -12,3 +12,8 @@ export const OWASP_PROMPT_INJECTION_URL =
 export function repoFile(path: string): string {
   return `${REPO_URL}/blob/main/${path}`;
 }
+
+/** A directory on the repository's main branch. */
+export function repoTree(path: string): string {
+  return `${REPO_URL}/tree/main/${path}`;
+}

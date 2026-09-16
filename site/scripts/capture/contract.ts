@@ -30,6 +30,8 @@ export const MEDIA_CONTRACT: readonly MediaSpec[] = [
   { file: "scenarios.png", width: DESKTOP_WIDTH, height: null },
   { file: "results.png", width: DESKTOP_WIDTH, height: null },
   { file: "detection-matrix.png", width: DESKTOP_WIDTH, height: null },
+  { file: "models.png", width: DESKTOP_WIDTH, height: null },
+  { file: "model-trace.png", width: DESKTOP_WIDTH, height: null },
   { file: "trace-injection.png", width: DESKTOP_WIDTH, height: null },
   { file: "terminal-replay.gif", width: GIF_OUTPUT_WIDTH, height: null },
   { file: "mobile-hero.png", width: MOBILE_WIDTH, height: MOBILE_HEIGHT },

@@ -285,3 +285,83 @@
   align-items: center;
   min-block-size: var(--touch-min);
 }
+
+/* Model comparison */
+.models {
+  display: grid;
+  gap: var(--space-7);
+}
+
+.models__method {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding-inline-start: var(--space-5);
+}
+
+.models__method strong {
+  font-weight: var(--weight-label);
+}
+
+.models__charts {
+  display: grid;
+  gap: var(--space-6);
+}
+
+@media (min-width: 48rem) {
+  .models__charts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.models__block {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.models__block h3 {
+  font-size: var(--text-md);
+}
+
+.score-table {
+  font-variant-numeric: tabular-nums;
+}
+
+.score-table th[scope="col"] {
+  text-align: center;
+}
+
+.score-table th[scope="row"] {
+  white-space: nowrap;
+}
+
+.score-table__hard {
+  display: block;
+  color: var(--c-ink-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-body);
+}
+
+.score {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.score--pass {
+  background: var(--c-pass-wash);
+}
+
+.score--partial {
+  background: var(--c-trip-wash);
+}
+
+.score--fail {
+  background: var(--c-sunken);
+  color: var(--c-ink-muted);
+}
+
+.cost__note {
+  margin-block-start: var(--space-3);
+  color: var(--c-ink-muted);
+  font-size: var(--text-sm);
+}

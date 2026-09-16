@@ -15,16 +15,31 @@ import {
 } from "../data/payload";
 import { bindDisclosures } from "../lib/disclosure";
 import { mount, query } from "../lib/dom";
+import { shortScenarioId } from "../viewmodel/scenario";
+import { traceSummary } from "../viewmodel/trace-summary";
 
 /** Section 6: the terminal replay of captured transcripts and the s07 trace viewer. */
 export function renderBackend(): ReplayController {
+  const scenario = scenarioById(INJECTION_SCENARIO_ID);
+  const traces: readonly [
+    ReturnType<typeof sampleTrace>,
+    ReturnType<typeof sampleTrace>,
+  ] = [
+    sampleTrace(INJECTION_SCENARIO_ID, BASELINE_AGENT),
+    sampleTrace(INJECTION_SCENARIO_ID, INJECTION_MUTANT),
+  ];
   const viewer = traceViewer({
-    scenario: scenarioById(INJECTION_SCENARIO_ID),
-    traces: [
-      sampleTrace(INJECTION_SCENARIO_ID, BASELINE_AGENT),
-      sampleTrace(INJECTION_SCENARIO_ID, INJECTION_MUTANT),
-    ],
+    id: "trace-viewer",
+    scenario,
+    traces,
     detectors: payload.meta.detectors,
+    caption: `One recorded run, read by read: \`${shortScenarioId(scenario.id)}\` prompt injection`,
+    summary: traceSummary(
+      traces[0],
+      traces[1],
+      scenario,
+      payload.meta.detectors,
+    ),
   });
   const section = mount(
     "backend",

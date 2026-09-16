@@ -15,6 +15,7 @@ import { renderFooter } from "./sections/footer";
 import { renderHero } from "./sections/hero";
 import { renderLayers } from "./sections/layers";
 import { renderLimits } from "./sections/limits";
+import { renderModels } from "./sections/models";
 import { renderResults } from "./sections/results";
 import { renderScenarios } from "./sections/scenarios";
 import { renderWhy } from "./sections/why";
@@ -45,6 +46,7 @@ function boot(): void {
   renderWhy();
   renderScenarios();
   renderResults();
+  renderModels();
   const replay = renderBackend();
   renderLimits();
   renderFooter();

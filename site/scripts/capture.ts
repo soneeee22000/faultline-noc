@@ -79,6 +79,14 @@ const REGIONS: readonly { readonly file: string; readonly region: Region }[] = [
     file: "trace-injection.png",
     region: { top: "#trace-viewer", bottom: "#trace-viewer" },
   },
+  {
+    file: "models.png",
+    region: { top: "#models .section-head", bottom: "#models .score-table" },
+  },
+  {
+    file: "model-trace.png",
+    region: { top: "#model-trace", bottom: "#model-trace" },
+  },
 ];
 
 /** Path of a media file in the committed docs folder. */

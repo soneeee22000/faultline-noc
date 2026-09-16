@@ -8,6 +8,7 @@ from pathlib import Path
 from faultline_noc.llm.env import load_env_file
 from faultline_noc.llm.evaluate import (
     EvalConfig,
+    EvalOutcome,
     build_payload,
     new_spend_tracker,
     run_evaluation,
@@ -22,7 +23,6 @@ from faultline_noc.paths import (
     DEFAULT_HARD_SCENARIOS_DIR,
     DEFAULT_SCENARIOS_DIR,
 )
-from faultline_noc.runner import RunResult
 from faultline_noc.scenario import Scenario, check_against_topology, load_scenarios
 from faultline_noc.topology import Topology, build_topology, load_intended_config
 
@@ -81,12 +81,12 @@ def _run(
     config: EvalConfig,
     scenarios: Sequence[Scenario],
     topology: Topology,
-    results: list[RunResult],
+    outcome: EvalOutcome,
     spend: SpendTracker,
 ) -> int:
     """Run the evaluation, turning a spend stop or a missing cassette into an exit code."""
     try:
-        run_evaluation(config, scenarios, topology, results, spend)
+        run_evaluation(config, scenarios, topology, outcome, spend)
     except BudgetExceededError as error:
         print(f"Stopped early: {error}", file=sys.stderr)
         return EXIT_BUDGET_REACHED
@@ -104,10 +104,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         load_env_file(DEFAULT_ENV_FILE)
     topology = build_topology(load_intended_config(DEFAULT_CONFIG_PATH))
     scenarios = _scenarios(topology, smoke=bool(args.smoke))
-    results: list[RunResult] = []
+    outcome = EvalOutcome()
     spend = new_spend_tracker(config)
-    code = _run(config, scenarios, topology, results, spend)
-    payload = build_payload(config, scenarios, results, spend)
+    code = _run(config, scenarios, topology, outcome, spend)
+    payload = build_payload(config, scenarios, outcome, spend, topology)
     print(render_markdown(payload))
     if args.json is not None and code == EXIT_OK:
         args.json.write_bytes((payload.model_dump_json(indent=2) + "\n").encode("utf-8"))
