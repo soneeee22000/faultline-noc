@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "faultline-noc"
 version = "0.1.0"
-description = "Seeded 5G SA core fault simulator and a deterministic evaluation harness for RCA agents (mock agents only)."
+description = "Seeded 5G SA core fault simulator and a deterministic evaluation harness for RCA agents, with a recorded Claude model evaluation."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
