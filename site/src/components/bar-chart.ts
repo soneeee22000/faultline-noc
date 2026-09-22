@@ -17,7 +17,11 @@ export interface BarChartOptions {
   readonly title: string;
   readonly rows: readonly BarRow[];
   readonly tipFor: (row: BarRow) => string;
+  /** What each row is, singular and plural, for the table header and summary. */
+  readonly subject?: { readonly one: string; readonly many: string };
 }
+
+const DEFAULT_SUBJECT = { one: "Agent", many: "agents" } as const;
 
 /** The filled bar: square at the baseline, rounded at the data end, or a stub for zero. */
 function barMarkup(row: BarRow): string {
@@ -77,6 +81,7 @@ function axisMarkup(): { grid: string; ticks: string } {
 
 /** The table view with the same values as the bars. */
 function tableMarkup(options: BarChartOptions): string {
+  const subject = options.subject ?? DEFAULT_SUBJECT;
   const body = options.rows
     .map(
       (row) =>
@@ -85,7 +90,7 @@ function tableMarkup(options: BarChartOptions): string {
     .join("");
   return `<div class="table-scroll" id="${options.id}-table" hidden><table class="data-table">
     <caption class="sr-only">${esc(options.title)}</caption>
-    <thead><tr><th scope="col">Agent</th><th scope="col">Correct / N</th><th scope="col">Rate</th><th scope="col">Wilson 95% interval</th></tr></thead>
+    <thead><tr><th scope="col">${esc(subject.one)}</th><th scope="col">Correct / N</th><th scope="col">Rate</th><th scope="col">Wilson 95% interval</th></tr></thead>
     <tbody>${body}</tbody></table></div>`;
 }
 
@@ -96,7 +101,7 @@ export function barChartMarkup(options: BarChartOptions): string {
     .map((row) => rowMarkup(row, options.tipFor(row)))
     .join("");
   return `<figure class="bar-chart" id="${options.id}" aria-labelledby="${options.id}-title" aria-describedby="${options.id}-desc">
-    <figcaption class="bar-chart__head"><h3 id="${options.id}-title">${esc(options.title)}</h3><p class="bar-chart__desc" id="${options.id}-desc">${richText(chartSummary(options.rows))} Whiskers show Wilson 95% intervals.</p></figcaption>
+    <figcaption class="bar-chart__head"><h3 id="${options.id}-title">${esc(options.title)}</h3><p class="bar-chart__desc" id="${options.id}-desc">${richText(chartSummary(options.rows, (options.subject ?? DEFAULT_SUBJECT).many))} Whiskers show Wilson 95% intervals.</p></figcaption>
     <div class="bar-chart__plot">${axis.grid}<ol class="bar-list">${rows}</ol></div>
     ${axis.ticks}
     ${disclosureButton(`${options.id}-table`, "Show table", "Hide table")}

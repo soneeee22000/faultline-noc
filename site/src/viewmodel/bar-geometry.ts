@@ -40,16 +40,16 @@ export function barGeometry(
   };
 }
 
-/** A one-sentence chart description: perfect scores and the lowest agents. */
-export function chartSummary(rows: readonly BarRow[]): string {
+/** A one-sentence chart description: perfect scores and the lowest rows, named by a plural noun. */
+export function chartSummary(rows: readonly BarRow[], noun = "agents"): string {
   const rates = rows.map((row) => row.rate);
   const lowest = Math.min(...rates);
   const perfect = rows.filter((row) => row.rate === PERFECT_RATE).length;
   if (rates.every((rate) => rate === lowest)) {
-    return `All ${rows.length} agents score ${formatRate(lowest)}.`;
+    return `All ${rows.length} ${noun} score ${formatRate(lowest)}.`;
   }
   const lowestAgents = rows
     .filter((row) => row.rate === lowest)
     .map((row) => `\`${row.agent}\``);
-  return `${perfect} of ${rows.length} agents score ${formatRate(PERFECT_RATE)}. Lowest: ${joinList(lowestAgents)} at ${formatRate(lowest)}.`;
+  return `${perfect} of ${rows.length} ${noun} score ${formatRate(PERFECT_RATE)}. Lowest: ${joinList(lowestAgents)} at ${formatRate(lowest)}.`;
 }

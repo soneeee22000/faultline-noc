@@ -11,3 +11,11 @@ export function trackProgress(
   if (scrollable <= 0) return 0;
   return Math.min(Math.max(-top / scrollable, 0), 1);
 }
+
+/** Whether a horizontally scrolling region actually overflows, so its scroll hint is true. */
+export function needsScrollHint(
+  scrollWidth: number,
+  clientWidth: number,
+): boolean {
+  return scrollWidth > clientWidth;
+}

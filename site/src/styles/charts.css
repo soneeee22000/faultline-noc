@@ -239,7 +239,8 @@
 }
 
 .heat-legend__caption,
-.matrix__hint {
+/* Shown only while its region really overflows: lib/scroll-hint.ts hides it otherwise. */
+.scroll-hint {
   color: var(--c-ink-muted);
   font-size: var(--text-sm);
 }
@@ -384,6 +385,18 @@
   font-weight: var(--weight-label);
 }
 
+/* From here a matrix has room for whole router names and wider cells, whatever its column count. */
+@media (min-width: 64rem) {
+  .heat {
+    min-inline-size: 5.5rem;
+  }
+
+  .matrix__table tbody th {
+    max-inline-size: none;
+    white-space: nowrap;
+  }
+}
+
 @media (min-width: 90rem) {
   .results__charts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -395,17 +408,19 @@
     grid-row: span 5;
     grid-template-rows: subgrid;
   }
+}
 
-  .matrix__hint {
-    display: none;
-  }
+/* A cell's second line: trips the baseline does not share */
+.heat__mark {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
 
-  .heat {
-    min-inline-size: 5.5rem;
-  }
-
-  .matrix__table tbody th {
-    max-inline-size: none;
-    white-space: nowrap;
-  }
+.heat__mark .icon {
+  inline-size: 1em;
+  block-size: 1em;
 }

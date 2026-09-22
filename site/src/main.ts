@@ -9,6 +9,7 @@ import "./styles/charts.css";
 import "./styles/backend.css";
 import type { LayerController } from "./components/layer-stack";
 import type { ReplayController } from "./components/terminal";
+import { bindScrollHints } from "./lib/scroll-hint";
 import { initTooltip } from "./lib/tooltip";
 import { renderBackend } from "./sections/backend";
 import { renderFooter } from "./sections/footer";
@@ -17,6 +18,7 @@ import { renderLayers } from "./sections/layers";
 import { renderLimits } from "./sections/limits";
 import { renderModels } from "./sections/models";
 import { renderResults } from "./sections/results";
+import { renderRouter } from "./sections/router";
 import { renderScenarios } from "./sections/scenarios";
 import { renderWhy } from "./sections/why";
 import { parseLayerStep } from "./viewmodel/layers";
@@ -48,8 +50,10 @@ function boot(): void {
   renderResults();
   renderModels();
   const replay = renderBackend();
+  renderRouter();
   renderLimits();
   renderFooter();
+  bindScrollHints(document);
   initTooltip();
   exposeCaptureHooks(layers, replay);
   void document.fonts.ready.then(() => {

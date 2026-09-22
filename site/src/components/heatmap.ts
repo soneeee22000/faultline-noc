@@ -1,4 +1,5 @@
-import { breakable, closestTarget, code, esc } from "../lib/dom";
+import { breakable, closestTarget, code, esc, richText } from "../lib/dom";
+import { icon } from "../lib/icons";
 import { moveCell } from "../viewmodel/grid-focus";
 import type { HeatBin, MatrixCellView, MatrixView } from "../viewmodel/matrix";
 
@@ -11,13 +12,45 @@ const SCALE: readonly { readonly bin: HeatBin; readonly label: string }[] = [
   { bin: 4, label: "100%" },
 ];
 
+/** Ids, copy and an optional extra legend for one heatmap on the page. */
+export interface HeatmapOptions {
+  readonly id: string;
+  readonly titleId: string;
+  readonly captionId: string;
+  readonly keysId: string;
+  readonly title: string;
+  readonly caption: string;
+  readonly note: string;
+  readonly rowHeader: string;
+  readonly extraLegend: string;
+}
+
+/** The RCA detection matrix, whose ids the capture script targets. */
+const DEFAULT_OPTIONS: HeatmapOptions = {
+  id: "detection-matrix",
+  titleId: "matrix-title",
+  captionId: "heat-legend-caption",
+  keysId: "matrix-keys",
+  title: "Detection matrix",
+  caption: "Share of applicable runs where the detector fired",
+  note: "An orange cell on a mutant row is the harness catching a planted defect. The rule baseline and oracle rows must stay at zero.",
+  rowHeader: "Agent",
+  extraLegend: "",
+};
+
 /** The five-swatch scale legend. */
-function legendMarkup(): string {
+function legendMarkup(options: HeatmapOptions): string {
   const items = SCALE.map(
     (step) =>
       `<li class="heat-legend__item"><span class="heat-legend__swatch heat--${step.bin}" aria-hidden="true"></span>${step.label}</li>`,
   ).join("");
-  return `<div class="heat-legend"><p class="heat-legend__caption" id="heat-legend-caption">Share of applicable runs where the detector fired</p><ul class="heat-legend__scale" aria-labelledby="heat-legend-caption">${items}</ul></div>`;
+  return `<div class="heat-legend"><p class="heat-legend__caption" id="${options.captionId}">${esc(options.caption)}</p><ul class="heat-legend__scale" aria-labelledby="${options.captionId}">${items}</ul>${options.extraLegend}</div>`;
+}
+
+/** The optional second line of a cell, led by the target glyph. */
+function markMarkup(cell: MatrixCellView): string {
+  if (cell.mark === undefined) return "";
+  return `<span class="heat__mark">${icon("crosshair")}${esc(cell.mark)}</span>`;
 }
 
 /** One cell with its count label and templated description; only the first cell is a Tab stop. */
@@ -27,7 +60,7 @@ function cellMarkup(
   colIndex: number,
 ): string {
   const tabindex = rowIndex === 0 && colIndex === 0 ? 0 : -1;
-  return `<td class="heat heat--${cell.bin} heat-tone--${cell.tone}" tabindex="${tabindex}" data-row="${rowIndex}" data-col="${colIndex}" data-tip="${esc(cell.description)}">${cell.label}</td>`;
+  return `<td class="heat heat--${cell.bin} heat-tone--${cell.tone}" tabindex="${tabindex}" data-row="${rowIndex}" data-col="${colIndex}" data-tip="${esc(cell.description)}">${cell.label}${markMarkup(cell)}</td>`;
 }
 
 /** Table body rows, with a group heading wherever the agent group changes. */
@@ -47,24 +80,27 @@ function bodyMarkup(view: MatrixView): string {
     .join("");
 }
 
-/** The detection matrix as a heatmap table with legend, note and scroll region. */
-export function heatmapMarkup(view: MatrixView): string {
+/** A detection matrix as a heatmap table with legend, note and scroll region. */
+export function heatmapMarkup(
+  view: MatrixView,
+  options: HeatmapOptions = DEFAULT_OPTIONS,
+): string {
   const headers = view.columns
     .map(
       (detector) => `<th scope="col"><code>${breakable(detector)}</code></th>`,
     )
     .join("");
-  return `<figure class="matrix" id="detection-matrix" aria-labelledby="matrix-title">
+  return `<figure class="matrix" id="${options.id}" aria-labelledby="${options.titleId}">
     <figcaption class="matrix__head">
-      <h3 id="matrix-title">Detection matrix</h3>
-      ${legendMarkup()}
-      <p class="matrix__note">An orange cell on a mutant row is the harness catching a planted defect. The rule baseline and oracle rows must stay at zero.</p>
-      <p class="matrix__hint">Scroll sideways for all ${view.columns.length} detectors.</p>
-      <p class="sr-only" id="matrix-keys">The matrix is one Tab stop. Use the arrow keys, Home and End to move between cells.</p>
+      <h3 id="${options.titleId}">${esc(options.title)}</h3>
+      ${legendMarkup(options)}
+      <p class="matrix__note">${richText(options.note)}</p>
+      <p class="scroll-hint" data-scroll-region="${options.id}-scroll">Scroll sideways for all ${view.columns.length} detectors.</p>
+      <p class="sr-only" id="${options.keysId}">The matrix is one Tab stop. Use the arrow keys, Home and End to move between cells.</p>
     </figcaption>
-    <div class="table-scroll matrix__scroll" role="region" aria-label="Detection matrix, scrolls horizontally">
-      <table class="matrix__table" aria-describedby="matrix-keys" data-rows="${view.rows.length}" data-cols="${view.columns.length}">
-        <thead><tr><th scope="col" class="matrix__corner">Agent</th>${headers}</tr></thead>
+    <div class="table-scroll matrix__scroll" id="${options.id}-scroll" role="region" aria-label="${esc(options.title)}, scrolls horizontally">
+      <table class="matrix__table" aria-describedby="${options.keysId}" data-rows="${view.rows.length}" data-cols="${view.columns.length}">
+        <thead><tr><th scope="col" class="matrix__corner">${esc(options.rowHeader)}</th>${headers}</tr></thead>
         <tbody>${bodyMarkup(view)}</tbody>
       </table>
     </div>

@@ -25,6 +25,8 @@ export interface MatrixCellView extends DetectionCell {
   readonly tone: CellTone;
   readonly label: string;
   readonly description: string;
+  /** A short second line, such as trips the baseline does not share. */
+  readonly mark?: string;
 }
 
 /** One heatmap row: an agent and its cells in detector order. */
@@ -80,11 +82,11 @@ export function buildMatrix(
   cells: readonly DetectionCell[],
   agents: readonly string[],
   detectors: readonly string[],
+  headings: readonly (string | null)[] = groupHeadings(agents),
 ): MatrixView {
   const index = new Map(
     cells.map((cell) => [`${cell.agent}|${cell.detector}`, cell]),
   );
-  const headings = groupHeadings(agents);
   const rows = agents.map((agent, position) => ({
     agent,
     group: agentGroup(agent),

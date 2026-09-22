@@ -150,3 +150,99 @@ export interface ResultsPayload {
   readonly scenarios: readonly ScenarioInfo[];
   readonly sample_traces: readonly SampleTrace[];
 }
+
+/** One step of a route plan, as exported by `faultline_noc/router/export.py`. */
+export interface RouteStepView {
+  readonly agent: string;
+  readonly objective: string;
+  readonly context_refs: readonly string[];
+  readonly allowed_capabilities: readonly string[];
+  readonly requires_confirmation: boolean;
+}
+
+/** A router's plan for one request: ordered steps, or a clarification with no steps. */
+export interface RoutePlanView {
+  readonly steps: readonly RouteStepView[];
+  readonly requires_clarification: boolean;
+  readonly clarification_question: string | null;
+  readonly confidence: number;
+}
+
+/** One step of a challenge item's authored expectation. */
+export interface ExpectedRouteStep {
+  readonly agent: string;
+  readonly context_refs: readonly string[];
+  readonly network_write: boolean;
+}
+
+/** One authored challenge item. */
+export interface RouterItem {
+  readonly id: string;
+  readonly request: string;
+  readonly available_context: readonly string[];
+  readonly expected: {
+    readonly requires_clarification: boolean;
+    readonly steps: readonly ExpectedRouteStep[];
+  };
+  readonly tags: readonly string[];
+  readonly baseline_miss: string | null;
+}
+
+/** One router's plan on one item, with the detectors it tripped. */
+export interface RouterOutcome {
+  readonly router: string;
+  readonly item_id: string;
+  readonly correct: boolean;
+  readonly tripped: readonly string[];
+  readonly plan: RoutePlanView;
+}
+
+/** Set-level metrics for one router; a rate with no denominator is null. */
+export interface RouterMetrics {
+  readonly router: string;
+  readonly items: number;
+  readonly route_correct: number;
+  readonly route_accuracy: number;
+  readonly route_interval: { readonly low: number; readonly high: number };
+  readonly macro_f1: number;
+  readonly clarification_precision: number | null;
+  readonly clarification_recall: number | null;
+  readonly handoff_completeness: number | null;
+  readonly handoff_precision: number | null;
+  readonly unsafe_write_gate_recall: number | null;
+  readonly injection_resistance: number | null;
+  readonly write_grant_recall: number | null;
+  readonly brier: number;
+  readonly ece: number;
+}
+
+/** One router-by-detector cell of the router detection matrix. */
+export interface RouterDetectionCell {
+  readonly router: string;
+  readonly detector: string;
+  readonly tripped: number;
+  readonly applicable: number;
+}
+
+/** Run metadata for the committed router `--all` run. */
+export interface RouterMeta {
+  readonly command: string;
+  readonly challenge_set: string;
+  readonly items: number;
+  readonly routers: readonly string[];
+  readonly baseline: string;
+  readonly detectors: readonly string[];
+  readonly calibration_bins: number;
+  readonly harness_pass: boolean;
+  readonly failures: readonly string[];
+}
+
+/** The whole `router_results.json` payload (schema version 1). */
+export interface RouterResultsPayload {
+  readonly schema_version: number;
+  readonly meta: RouterMeta;
+  readonly metrics: readonly RouterMetrics[];
+  readonly detection_matrix: readonly RouterDetectionCell[];
+  readonly items: readonly RouterItem[];
+  readonly outcomes: readonly RouterOutcome[];
+}

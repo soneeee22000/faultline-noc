@@ -89,6 +89,10 @@
   font-size: var(--text-sm);
 }
 
+.specimen__plan {
+  display: inline;
+}
+
 .specimen__result {
   display: flex;
   flex-wrap: wrap;
@@ -364,4 +368,179 @@
   margin-block-start: var(--space-3);
   color: var(--c-ink-muted);
   font-size: var(--text-sm);
+}
+
+/* Router design note */
+.router__gate-body,
+.router__limits {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.router__caveat,
+.router__verdict {
+  max-inline-size: var(--measure);
+  font-size: var(--text-sm);
+}
+
+.router__chart {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.router__specimen {
+  background: var(--c-sunken);
+}
+
+.router__links {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.router__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+/* The route contract: one request, one plan, field by field */
+.route-diagram {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+}
+
+.route-diagram__caption {
+  color: var(--c-ink-muted);
+  font-size: var(--text-sm);
+}
+
+.route-diagram__body {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.route-diagram__flow {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+}
+
+/* The diagram sits on the section surface, so its own halo colour is that surface. */
+.route-flow {
+  --halo-color: var(--c-ground);
+  inline-size: 100%;
+  max-inline-size: 30rem;
+  block-size: auto;
+}
+
+.route-diagram__label {
+  color: var(--c-ink-muted);
+  font-size: var(--text-sm);
+}
+
+.route-diagram__request {
+  margin: 0;
+  padding-inline-start: var(--space-4);
+  border-inline-start: 2px solid var(--c-signal);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+.route-plan {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+  padding: var(--space-4);
+  border-radius: var(--radius-panel);
+  background: var(--c-raised);
+  box-shadow: var(--shadow-panel);
+}
+
+/* A chip on the card's own surface would be invisible, and these chips carry the safety argument. */
+.route-plan .chip--code {
+  background: var(--c-sunken);
+  box-shadow: 0 0 0 1px var(--c-line);
+}
+
+.route-plan__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: baseline;
+  font-size: var(--text-sm);
+}
+
+.route-plan__steps {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A hairline between steps stands in for the arrow: the plan is ordered. */
+.route-plan__steps > li + li {
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--c-line);
+}
+
+.route-plan__note {
+  font-size: var(--text-sm);
+}
+
+.route-step {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.route-step__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: baseline;
+  font-size: var(--text-sm);
+}
+
+.route-step__fields {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.route-step__fields > div {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.route-step__fields dt {
+  color: var(--c-ink-muted);
+}
+
+.route-step__fields dt code {
+  color: var(--c-ink-muted);
+}
+
+.route-step__fields dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  min-inline-size: 0;
+}
+
+@media (min-width: 48rem) {
+  .router__gate-body,
+  .route-diagram__body {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .route-step__fields > div {
+    grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+    gap: var(--space-3);
+    align-items: baseline;
+  }
 }
