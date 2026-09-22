@@ -38,6 +38,12 @@ jobs:
         run: python -m faultline_noc.llm --replay --seeds 3 --json "$RUNNER_TEMP/llm_results.json"
       - name: Committed llm_results.json matches the replay
         run: diff -u site/src/data/llm_results.json "$RUNNER_TEMP/llm_results.json"
+      - name: Router smoke run
+        run: python -m faultline_noc.router --smoke
+      - name: Router challenge set
+        run: python -m faultline_noc.router --all --json "$RUNNER_TEMP/router_results.json"
+      - name: Committed router_results.json matches a fresh run
+        run: diff -u site/src/data/router_results.json "$RUNNER_TEMP/router_results.json"
 
   site:
     runs-on: ubuntu-latest

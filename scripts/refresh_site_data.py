@@ -1,8 +1,9 @@
 """Regenerate the project page's data from real runs of this repo's code.
 
-Writes site/src/data/results.json from `python -m faultline_noc --all`, and
-site/src/data/llm_results.json from a replay of the committed cassettes, and the stdout of the
-smoke run, pytest and mypy to site/src/data/transcripts/. Each transcript starts with one header
+Writes site/src/data/results.json from `python -m faultline_noc --all`,
+site/src/data/llm_results.json from a replay of the committed cassettes,
+site/src/data/router_results.json from `python -m faultline_noc.router --all`, and the stdout of
+the smoke run, pytest and mypy to site/src/data/transcripts/. Each transcript starts with one header
 line naming the command, the Python version and the date it was captured.
 """
 
@@ -18,6 +19,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = REPO_ROOT / "site" / "src" / "data"
 RESULTS_PATH = DATA_DIR / "results.json"
 LLM_RESULTS_PATH = DATA_DIR / "llm_results.json"
+ROUTER_RESULTS_PATH = DATA_DIR / "router_results.json"
 TRANSCRIPTS_DIR = DATA_DIR / "transcripts"
 LLM_SEED_COUNT = "3"
 EXIT_OK = 0
@@ -74,6 +76,12 @@ def write_llm_results() -> None:
     print(f"wrote {LLM_RESULTS_PATH.relative_to(REPO_ROOT).as_posix()}")
 
 
+def write_router_results() -> None:
+    """Write router_results.json from a full run of the router challenge set."""
+    run_python(("-m", "faultline_noc.router", "--all", "--json", str(ROUTER_RESULTS_PATH)))
+    print(f"wrote {ROUTER_RESULTS_PATH.relative_to(REPO_ROOT).as_posix()}")
+
+
 def write_transcript(transcript: Transcript, captured_on: date) -> None:
     """Run one transcript command and save its header and stdout with LF line endings."""
     stdout = run_python(transcript.arguments)
@@ -85,9 +93,10 @@ def write_transcript(transcript: Transcript, captured_on: date) -> None:
 
 
 def main() -> int:
-    """Refresh results.json, llm_results.json and every transcript."""
+    """Refresh results.json, llm_results.json, router_results.json and every transcript."""
     write_results()
     write_llm_results()
+    write_router_results()
     captured_on = date.today()
     for transcript in TRANSCRIPTS:
         write_transcript(transcript, captured_on)
