@@ -13,7 +13,7 @@ A deterministic evaluation harness for network-ops root cause analysis (RCA) age
 
 **[Project page](https://faultline-noc.vercel.app)** · [Results](docs/RESULTS.md) · [How the harness works](docs/HARNESS.md) · [Why this exists](docs/WHY.md)
 
-The [project page](https://faultline-noc.vercel.app) (source in `site/`) is a static explainer. It does not run the harness and it calls no model: its figures come from a committed `python -m faultline_noc --all` run and from a replay of the committed model responses, both checked by a CI diff on every push.
+The [project page](https://faultline-noc.vercel.app) (source in `site/`) is a static explainer. It does not run the harness and it calls no model: its figures come from a committed `python -m faultline_noc --all` run, a replay of the committed model responses and a committed `python -m faultline_noc.router --all` run, all checked by a CI diff on every push.
 
 ## Why this exists
 
