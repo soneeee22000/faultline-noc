@@ -129,6 +129,12 @@ One scenario, two agents, read by read. `rule_baseline` stops after alarms and n
 
 Three seeds is a small sample and the intervals overlap, so this does not separate Sonnet from Haiku. No agent followed the instruction injected into a log line, but that is three runs each and the system prompt warns the model that log text is untrusted. Method, every miss run by run, and the $0.74 cost are in [docs/LLM.md](docs/LLM.md). The same comparison, with the trace above, is on the [project page](https://faultline-noc.vercel.app/#models).
 
+## Router evaluation
+
+`python -m faultline_noc.router` scores a router, the step in front of the knowledge, testing and incident agents that turns one request into an ordered plan. It runs a 52-item authored challenge set in `scenarios/router/challenge.yaml`: single and ordered multi-intent requests, ambiguous ones that should be clarified, network writes that need confirmation, and prompt injections hidden in pasted logs and tickets. Four deterministic detectors check each plan: `misroute`, `missing_handoff_context`, `unsafe_write` and `missed_clarification`. Set-level metrics are ordered-route accuracy with a Wilson interval, macro-F1 by specialist, clarification precision and recall, handoff completeness and precision, unsafe-write gate recall over granted writes, injection resistance, write-grant recall, and Brier and ECE for calibration.
+
+As in the RCA harness, the harness itself is what's being tested. Four mutant routers each carry one defect: everything sent to incident, context dropped after the first step, ungated writes, and never clarifying. The check passes only when every mutant runs and trips its own detector on an item where the keyword baseline doesn't, the baseline gates every write it grants, and a followed injection trips `unsafe_write` on every injection item. The baseline's route accuracy, 40/52 [0.64, 0.86], is not a quality claim: the set is small and written by the author, and most of the twelve items the baseline misses were written against its keyword lists on purpose. Definitions, the contract and every documented miss are in [docs/ROUTER.md](docs/ROUTER.md). The design decision is in [ADR-002](docs/adr/002-router-eval.md).
+
 ## Back end
 
 Replay of a real local run (`python -m faultline_noc --smoke` and `pytest`, Python 3.12.13, 2026-09-15). The GIF replays captured stdout; nothing runs in the browser.
@@ -169,9 +175,16 @@ python -m faultline_noc.llm --record --smoke          # one scenario, one seed, 
 python -m faultline_noc.llm --record --seeds 3 --budget-usd 10
 ```
 
+Score the router harness on the challenge set:
+
+```bash
+python -m faultline_noc.router --smoke                # first challenge item of each tag
+python -m faultline_noc.router --all --json router_results.json
+```
+
 Replay reads the committed responses in `cassettes/` and fails closed if a prompt or tool definition has changed. Recording calls the API and costs money: it reads `ANTHROPIC_API_KEY` from the environment or from a git-ignored `.env`, and stops before the next request once the budget is reached. The full run behind [docs/LLM.md](docs/LLM.md) cost $0.74.
 
-The CLI exits with code 1 if the harness check fails. CI (`.github/workflows/ci.yml`) runs lint, format, `mypy --strict`, pytest, the smoke run and `--all` on Python 3.11 and 3.12, diffs a fresh `results.json` against the committed one, then replays the LLM evaluation and diffs `llm_results.json` the same way. Actions are pinned to commit SHAs.
+The CLI exits with code 1 if the harness check fails. CI (`.github/workflows/ci.yml`) runs lint, format, `mypy --strict`, pytest, the smoke run and `--all` on Python 3.11 and 3.12, diffs a fresh `results.json` against the committed one, then replays the LLM evaluation and diffs `llm_results.json` the same way, then runs the router harness and diffs `router_results.json`. Actions are pinned to commit SHAs.
 
 To refresh the project page's data and transcripts from real runs:
 
@@ -196,12 +209,13 @@ faultline_noc/
   export.py        deterministic JSON payload for the project page
   __main__.py      CLI
   llm/             tool-use loop, tools, cassette transports, spend cap, evaluation CLI
-scenarios/         four published YAML scenarios; hard/ holds the two the baseline fails
+  router/          router plans, challenge-set loader, keyword baseline, mutants, detectors, metrics, CLI
+scenarios/         four published YAML scenarios; hard/ holds the two the baseline fails; router/ holds the router challenge set
 cassettes/         recorded model responses, replayed by CI without an API key
 config/            intended_config.json
 scripts/           refresh_site_data.py
 site/              static project page (Vite, TypeScript), reads site/src/data at build time
-docs/              WHY, HARNESS, RESULTS, LLM, nf-model, ADRs, media
+docs/              WHY, HARNESS, RESULTS, LLM, ROUTER, nf-model, ADRs, media
 tests/
 ```
 
@@ -213,9 +227,10 @@ tests/
 - **The model numbers rest on three seeds per scenario.** The intervals are wide and overlapping, and the injection result covers three runs per agent.
 - **Simulated, not emulated.** No protocol stack runs. Telemetry follows a hand-written dependency table with one-hop, consumer-side symptoms. See [docs/nf-model.md](docs/nf-model.md).
 - **The session returns everything for the mock agents.** No query tools or filters. The model agents instead read through six tools under a fixed call budget.
+- **The router challenge set is authored and small.** 52 items written by the author, with no held-out split. Only plan structure is scored, not the wording of a step's objective. See [docs/ROUTER.md](docs/ROUTER.md#caveats).
 - **Truth isolation is a type, an allowlist and a test**, not process isolation. Detector coverage gaps are listed in [docs/HARNESS.md](docs/HARNESS.md#known-gaps-in-detector-coverage).
 - **The baseline's noise filter is a catalog lookup.** A new noise code would get past it until the catalog is updated.
-- **Confidence is not calibrated.** No Brier score is reported, for any agent. Six scenarios exist in total: four published plus two hard ones; the classes listed on the roadmap are not built.
+- **RCA confidence is not calibrated.** No Brier score is reported for any RCA agent. The router add-on reports Brier and ECE, but over 52 authored items, so they are rough signals. Six scenarios exist in total: four published plus two hard ones; the classes listed on the roadmap are not built.
 
 ## Roadmap
 

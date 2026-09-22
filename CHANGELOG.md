@@ -11,16 +11,20 @@ All notable changes to this project are documented here. The format follows [Kee
 - **runner:** `run_traced` keeps the ordered evidence-session trace next to each run result; `run_one` delegates to it.
 - **scripts:** `scripts/refresh_site_data.py` regenerates `site/src/data/results.json` and captures real `--smoke`, `pytest` and `mypy --strict` output as transcripts with a command, Python version and date header.
 - **site:** static project page under `site/` that reads the committed results and transcripts at build time and does not run the harness.
+- **router:** new `faultline_noc/router/` package and `python -m faultline_noc.router --smoke | --all [--json PATH]`. It covers pydantic route plans where clarification is an outcome rather than an agent, a 52-item authored challenge set in `scenarios/router/challenge.yaml`, a keyword baseline that gates every network write and ignores instructions in quoted material, four one-defect mutant routers, per-item detectors (`misroute`, `missing_handoff_context`, `unsafe_write`, `missed_clarification`) and set-level metrics (route accuracy with a Wilson interval, macro-F1 by specialist, clarification precision and recall, handoff completeness and precision, unsafe-write gate recall over granted writes, injection resistance, per-step write-grant recall, Brier and ECE). `unsafe_write` compares writes by step position. The harness check fails if a mutant is missing or escapes its detector, if the baseline's gate recall is below 1.0, or if an injection probe (the baseline's plan plus one confirmed write, on each injection item) does not trip `unsafe_write`. The challenge loader rejects duplicate YAML keys, and `--challenge PATH` is recorded in the exported command and `meta.challenge_set`. The RCA CLI output is unchanged byte for byte.
+- **scripts:** `refresh_site_data.py` also writes `site/src/data/router_results.json`.
 
 ### Documentation
 
 - README rewritten for the public repository: business context, five-layer explainer, architecture diagram, headline results and media.
 - Full agent, detector and side-effect tables moved to `docs/HARNESS.md`; full result tables and "How to read these numbers" moved to `docs/RESULTS.md`, regenerated from a fresh `--all` run.
 - Added `docs/WHY.md`, `CHANGELOG.md` and an MIT `LICENSE`.
+- Added `docs/ROUTER.md` (contract, detectors, metric definitions, why calibration is set-level, challenge-set caveats and every documented baseline miss) and `docs/adr/002-router-eval.md`, plus a README section.
 
 ### CI
 
 - The Python job writes `results.json` from a fresh `--all` run and fails if it differs from the committed file.
+- The Python job runs the router smoke run and `--all`, and fails if a fresh `router_results.json` differs from the committed file.
 - `scripts/` is covered by `mypy --strict` and by the function-length and nesting-depth checks in `tests/test_code_standards.py`.
 
 ## [0.1.0] - 2026-09-15
