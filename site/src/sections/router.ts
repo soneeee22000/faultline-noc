@@ -8,6 +8,9 @@ import {
   CALIBRATION_CAVEAT,
   CONTRACT_POINTS,
   DEPLOYMENT_NEEDS,
+  MODEL_ROUTERS_LEDE,
+  MODEL_ROUTERS_MALFORMED,
+  MODEL_ROUTERS_TITLE,
   GATE_POINTS,
   ROUTER_DATA_NOTE,
   ROUTER_LEDE,
@@ -23,12 +26,13 @@ import {
   CLARIFY_EXAMPLE_ITEM_ID,
   INJECTION_EXAMPLE_ITEM_ID,
   ROUTE_EXAMPLE_ITEM_ID,
+  llmRouterPayload,
   routerItem,
   routerMetrics,
   routerOutcome,
   routerPayload,
 } from "../data/payload";
-import { bindDisclosures } from "../lib/disclosure";
+import { bindDisclosures, disclosureButton } from "../lib/disclosure";
 import { code, esc, fill, joinList, mount, richText } from "../lib/dom";
 import { icon } from "../lib/icons";
 import type {
@@ -38,6 +42,12 @@ import type {
 } from "../types/payload";
 import { buildBarRows } from "../viewmodel/bars";
 import { formatCount, formatInterval, formatRate } from "../viewmodel/format";
+import {
+  type ItemStatus,
+  formatCost,
+  modelMisses,
+  modelRouterRows,
+} from "../viewmodel/llm-router";
 import {
   buildRouteFlow,
   buildRouterMatrix,
@@ -57,6 +67,15 @@ const UNGATED_MUTANT = "mutant_ungated_write";
 const WRITE_CAPABILITY = "network_write";
 const UNSAFE_WRITE = "unsafe_write";
 const MISROUTE = "misroute";
+const PROMPT_HASH_CHARS = 12;
+
+/** How a status reads in the per-item table. */
+const STATUS_LABELS: Readonly<Record<ItemStatus, string>> = {
+  correct: "right",
+  wrong: "wrong route",
+  malformed: "malformed",
+  unsafe: "unsafe write",
+};
 
 /** Routers other than the baseline, in report order. */
 function mutants(): readonly string[] {
@@ -101,6 +120,9 @@ function copyValues(): Values {
     ),
     baselineMisroute: cellLabel(meta.baseline, MISROUTE),
     routerDoc: ROUTER_LINKS.doc,
+    devItems: llmRouterPayload.meta.dev_items,
+    promptHash: llmRouterPayload.meta.prompt_sha256.slice(0, PROMPT_HASH_CHARS),
+    cost: formatCost(llmRouterPayload.meta.cost_usd),
   };
 }
 
@@ -334,6 +356,73 @@ function metricsTableMarkup(values: Values): string {
   </div>`;
 }
 
+/** One router's row in the model comparison. */
+function modelRow(row: ReturnType<typeof modelRouterRows>[number]): string {
+  const cells = [
+    `${formatCount(row.correct, row.items)} ${formatInterval(row.low, row.high)}`,
+    String(row.unsafeWrites),
+    formatMetric(row.injection),
+    String(row.malformed),
+    formatMetric(row.brier),
+    formatCost(row.costUsd),
+  ]
+    .map((value) => `<td>${value}</td>`)
+    .join("");
+  return `<tr${row.isBaseline ? ' class="data-table__baseline"' : ""}><th scope="row">${code(row.router)}</th>${cells}</tr>`;
+}
+
+/** A status as the page's pass/trip state marker. */
+function statusMarkup(status: ItemStatus): string {
+  if (status === "correct")
+    return `<span class="state state--pass">${icon("circle")}${esc(STATUS_LABELS[status])}</span>`;
+  return `<span class="state state--trip">${icon("diamond", "icon--filled")}${esc(STATUS_LABELS[status])}</span>`;
+}
+
+/** Every item a model missed, with each router's status on it. */
+function missesMarkup(): string {
+  const misses = modelMisses(llmRouterPayload, routerPayload.outcomes);
+  const head = llmRouterPayload.meta.routers
+    .map((router) => `<th scope="col">${code(router)}</th>`)
+    .join("");
+  const rows = misses
+    .map((miss) => {
+      const cells = miss.statuses
+        .map((entry) => `<td>${statusMarkup(entry.status)}</td>`)
+        .join("");
+      return `<tr><th scope="row">${code(miss.itemId)}</th>${cells}</tr>`;
+    })
+    .join("");
+  const closed = `Show the ${misses.length} items a model router did not get right`;
+  return `<div class="router__misses">${disclosureButton("model-misses", closed, "Hide the items")}
+    <div class="table-scroll" id="model-misses" hidden role="region" aria-label="Items a model router did not get right" tabindex="0"><table class="data-table"><thead><tr><th scope="col">Item</th>${head}</tr></thead><tbody>${rows}</tbody></table></div>
+  </div>`;
+}
+
+/** The model routers next to the baseline: accuracy, safety, malformed answers and cost. */
+function modelRoutersMarkup(values: Values): string {
+  const rows = modelRouterRows(llmRouterPayload).map(modelRow).join("");
+  const headers = [
+    "Router",
+    "Exact route (95% CI)",
+    "Unsafe writes",
+    "Injection resistance",
+    "Malformed",
+    "Brier",
+    "Recorded cost",
+  ]
+    .map((label) => `<th scope="col">${label}</th>`)
+    .join("");
+  return `<div class="models__block" id="model-routers">
+    <h3 id="model-routers-title">${esc(MODEL_ROUTERS_TITLE)}</h3>
+    <p>${richText(fill(MODEL_ROUTERS_LEDE, values))}</p>
+    <div class="table-scroll" id="model-routers-scroll" role="region" aria-labelledby="model-routers-title" tabindex="0">
+      <table class="data-table" aria-labelledby="model-routers-title"><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>
+    </div>
+    <p class="cost__note">${richText(MODEL_ROUTERS_MALFORMED)}</p>
+    ${missesMarkup()}
+  </div>`;
+}
+
 /** The limits and what a real deployment would need, side by side from 768. */
 function limitsMarkup(values: Values): string {
   return `<div class="limits router__limits">
@@ -348,6 +437,7 @@ function linksMarkup(): string {
     <div class="router__actions">
       <a class="button" href="${ROUTER_LINKS.doc}">Read docs/ROUTER.md</a>
       <a class="button" href="${ROUTER_LINKS.adr}">Read ADR-002</a>
+      <a class="button" href="${ROUTER_LINKS.llmAdr}">Read ADR-003</a>
     </div>
     <p class="data-note">${icon("info")}<span>Reproduce the metrics, the matrix and the verdict: ${code(routerPayload.meta.command)}. Adding ${code("--json router_results.json")} writes the payload this section is built from, per item and per plan.</span></p>
   </div>`;
@@ -385,6 +475,7 @@ export function renderRouter(): void {
           ${matrixMarkup(values)}
         </div>
         ${metricsTableMarkup(values)}
+        ${modelRoutersMarkup(values)}
         ${limitsMarkup(values)}
         ${linksMarkup()}
       </div>

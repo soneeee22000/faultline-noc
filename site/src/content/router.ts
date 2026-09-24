@@ -11,7 +11,7 @@ export const ROUTER_LEDE =
 
 /** The honest data line under the lede. Placeholders come from router_results.json. */
 export const ROUTER_DATA_NOTE =
-  "Numbers from `{command}` over {items} authored items, checked by a CI diff on every push. Every router here is deterministic code: no model is called.";
+  "Numbers from `{command}` over {items} authored items, checked by a CI diff on every push. The baseline and the mutants are deterministic code. The model routers replay recorded responses, so no model is called when this page loads or when CI runs.";
 
 /** What the contract diagram's two outcomes mean. */
 export const CONTRACT_POINTS: readonly LeadItem[] = [
@@ -92,14 +92,14 @@ export const ROUTER_LIMITS: readonly LeadItem[] = [
       "It exists to give the mutants a plan to corrupt. Its word lists are generic, and its misses were mostly written on purpose.",
   },
   {
-    lead: "No LLM router has been scored yet.",
+    lead: "One recorded answer per model per item.",
     detail:
-      "Every router on this page is deterministic code. The contract and the detectors are ready for one, but no model responses have been recorded for the router, so no model router has been scored here.",
+      "Each model answered each item once, from a prompt frozen after tuning on {devItems} separate development items. There is no seed variance, and the model intervals overlap the baseline's, so the model table is a comparison, not a quality claim.",
   },
   {
     lead: "Injection resistance is structural, not adversarial.",
     detail:
-      "All {mutants} mutants wrap the baseline, which strips quoted spans before it routes, so every router in the run scores {injection} and no router has been shown to fail the metric. It is exercised by a fixed injection probe and by unit tests, over {injectionItems} items written by the author of the stripper.",
+      "All {mutants} mutants wrap the baseline, which strips quoted spans before it routes, so every mutant scores {injection}. It is exercised by a fixed injection probe, by unit tests and by the model routers, over {injectionItems} items written by the author of the stripper.",
   },
   {
     lead: "Write targets are not checked.",
@@ -125,15 +125,22 @@ export const DEPLOYMENT_NEEDS: readonly LeadItem[] = [
     detail:
       "Faults injected into a sandboxed lab or cluster, so the expected route and the true root cause come from the injection itself rather than from an author's label.",
   },
-  {
-    lead: "Recorded model responses for an LLM router.",
-    detail:
-      "The same approach as the model comparison above: record each response once, replay it in CI, and score the model router with the same detectors and metrics as the baseline and mutants.",
-  },
 ];
 
 /** Where to read further. */
 export const ROUTER_LINKS = {
   doc: repoFile("docs/ROUTER.md"),
   adr: repoFile("docs/adr/002-router-eval.md"),
+  llmAdr: repoFile("docs/adr/003-llm-router.md"),
 } as const;
+
+/** The model-router block title. */
+export const MODEL_ROUTERS_TITLE = "Model routers, recorded and replayed";
+
+/** How the model routers were run. Placeholders come from router_llm_results.json. */
+export const MODEL_ROUTERS_LEDE =
+  "Two Claude models route the same {items} items through a forced `submit_route_plan` tool call, scored by the same detectors and metrics. The prompt was tuned only on {devItems} development items outside the set, then frozen (sha256 `{promptHash}`). Every response is recorded once, {cost} in total, and CI replays it byte for byte with no API key.";
+
+/** Why malformed answers count as wrong. */
+export const MODEL_ROUTERS_MALFORMED =
+  "A malformed answer is scored as wrong and never repaired: it routes nowhere, hands on no ref, asks nothing and earns no injection credit. Fixing it, for example with a strict tool schema, means a new prompt hash tuned on the dev set, never a patch to these results.";

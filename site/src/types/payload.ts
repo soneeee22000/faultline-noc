@@ -246,3 +246,44 @@ export interface RouterResultsPayload {
   readonly items: readonly RouterItem[];
   readonly outcomes: readonly RouterOutcome[];
 }
+
+/** One model router's answer on one item: a plan, or why it was malformed, and its cost. */
+export interface LlmRouterOutcome {
+  readonly router: string;
+  readonly item_id: string;
+  readonly correct: boolean;
+  readonly tripped: readonly string[];
+  readonly plan: RoutePlanView | null;
+  readonly malformed: string | null;
+  readonly stated_confidence: number | null;
+  readonly cassette_key: string;
+  readonly stop_reason: string | null;
+  readonly input_tokens: number;
+  readonly output_tokens: number;
+  readonly cost_usd: number;
+}
+
+/** Run metadata for the committed LLM router replay. */
+export interface LlmRouterMeta {
+  readonly command: string;
+  readonly challenge_set: string;
+  readonly items: number;
+  readonly baseline: string;
+  readonly routers: readonly string[];
+  readonly models: readonly string[];
+  readonly prompt_sha256: string;
+  readonly prompt_tuned_on: string;
+  readonly dev_items: number;
+  readonly calibration_bins: number;
+  readonly cost_usd: number;
+  readonly malformed: Readonly<Record<string, number>>;
+}
+
+/** The whole `router_llm_results.json` payload (schema version 1). */
+export interface LlmRouterPayload {
+  readonly schema_version: number;
+  readonly meta: LlmRouterMeta;
+  readonly metrics: readonly RouterMetrics[];
+  readonly detection_matrix: readonly RouterDetectionCell[];
+  readonly outcomes: readonly LlmRouterOutcome[];
+}

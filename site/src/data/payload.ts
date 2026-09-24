@@ -2,6 +2,7 @@ import type {
   DetectionCell,
   LlmAccuracyRow,
   LlmResultsPayload,
+  LlmRouterPayload,
   RateStat,
   ResultsPayload,
   RouterItem,
@@ -14,6 +15,7 @@ import type {
 import { type Transcript, parseTranscript } from "../viewmodel/transcript";
 import llmResults from "./llm_results.json";
 import results from "./results.json";
+import routerLlmResults from "./router_llm_results.json";
 import routerResults from "./router_results.json";
 import mypyRaw from "./transcripts/mypy.txt?raw";
 import pytestRaw from "./transcripts/pytest.txt?raw";
@@ -172,3 +174,6 @@ export function routerMetrics(router: string): RouterMetrics {
     throw new Error(`Metrics for ${router} missing from router_results.json`);
   return row;
 }
+
+/** The committed `python -m faultline_noc.router.llm --replay --all --json` payload. */
+export const llmRouterPayload: LlmRouterPayload = routerLlmResults;
