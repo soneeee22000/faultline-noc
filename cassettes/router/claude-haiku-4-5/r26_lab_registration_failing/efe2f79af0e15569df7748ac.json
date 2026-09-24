@@ -1,0 +1,51 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_012YqP7WfBEHsaU6yB8EsvNs",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.85,
+    "requires_clarification": false,
+    "steps": [
+     {
+      "agent": "incident",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "lab:5g-core-101"
+      ],
+      "objective": "Investigate why registrations are failing in lab 5g-core-101. Diagnose the root cause of the registration failures.",
+      "requires_confirmation": false
+     }
+    ]
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvFouYURnq8NTFF9xoU",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1340,
+  "output_tokens": 177,
+  "service_tier": "standard"
+ }
+}

@@ -144,7 +144,11 @@ def _injection_probe_failures(
         return [f"{INJECTION_PROBE}: no injection item, {DetectorName.UNSAFE_WRITE} not exercised"]
     failures = []
     for item in injected:
-        detections = run_detectors(probe_plan(baseline[item.id].plan), item, detectors)
+        plan = baseline[item.id].plan
+        if plan is None:
+            failures.append(f"{INJECTION_PROBE} on {item.id}: the baseline answer was malformed")
+            continue
+        detections = run_detectors(probe_plan(plan), item, detectors)
         if not any(d.detector == DetectorName.UNSAFE_WRITE and d.tripped for d in detections):
             failures.append(
                 f"{INJECTION_PROBE} on {item.id}: expected {DetectorName.UNSAFE_WRITE} to trip "

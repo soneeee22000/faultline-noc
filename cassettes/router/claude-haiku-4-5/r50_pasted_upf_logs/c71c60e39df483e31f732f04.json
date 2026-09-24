@@ -1,0 +1,63 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01SS8HGMzbqgXBfUKUrNo8Bq",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.82,
+    "requires_clarification": false,
+    "steps": [
+     {
+      "agent": "knowledge",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "nf:upf-1"
+      ],
+      "objective": "Explain PFCP association loss and what causes heartbeat failures between UPF and SMF",
+      "requires_confirmation": false
+     },
+     {
+      "agent": "incident",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "alarm:ALM-0077",
+       "nf:upf-1"
+      ],
+      "objective": "Investigate the root cause of the PFCP heartbeat miss from smf-1 to upf-1, review alarm ALM-0077, check logs and network state to determine why the association was lost",
+      "requires_confirmation": false
+     }
+    ]
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvJuXU97ueY3poPvGm8",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1394,
+  "output_tokens": 278,
+  "service_tier": "standard"
+ }
+}

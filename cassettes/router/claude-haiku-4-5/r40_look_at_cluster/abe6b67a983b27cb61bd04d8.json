@@ -1,0 +1,39 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01NJVneMf3VWsyX8uKHUJg36",
+   "input": {
+    "clarification_question": "What would you like to know about cluster B? For example: understand its current state, investigate an issue, run a test, or explain a concept?",
+    "confidence": 0.1,
+    "requires_clarification": true,
+    "steps": []
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvHnyJB1pnXu4ZnSg4j",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1324,
+  "output_tokens": 122,
+  "service_tier": "standard"
+ }
+}

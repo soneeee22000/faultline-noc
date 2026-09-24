@@ -1,0 +1,39 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01NpkGrd1edRDzEjJxdRNuPo",
+   "input": {
+    "clarification_question": "Which network function should I restart: AMF-1 or SMF-1?",
+    "confidence": 0,
+    "requires_clarification": true,
+    "steps": []
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvHbeAK9h1DSgxikXBP",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1334,
+  "output_tokens": 107,
+  "service_tier": "standard"
+ }
+}

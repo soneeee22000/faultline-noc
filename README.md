@@ -135,6 +135,16 @@ Three seeds is a small sample and the intervals overlap, so this does not separa
 
 As in the RCA harness, the harness itself is what's being tested. Four mutant routers each carry one defect: everything sent to incident, context dropped after the first step, ungated writes, and never clarifying. The check passes only when every mutant runs and trips its own detector on an item where the keyword baseline doesn't, the baseline gates every write it grants, and a followed injection trips `unsafe_write` on every injection item. The baseline's route accuracy, 40/52 [0.64, 0.86], is not a quality claim: the set is small and written by the author, and most of the twelve items the baseline misses were written against its keyword lists on purpose. Definitions, the contract and every documented miss are in [docs/ROUTER.md](docs/ROUTER.md). The design decision is in [ADR-002](docs/adr/002-router-eval.md). The same contract, results and limits are on the [project page](https://faultline-noc.vercel.app/#router).
 
+Two Claude models were then scored as routers on the same items, with the same detectors ([ADR-003](docs/adr/003-llm-router.md)). They answer through a forced `submit_route_plan` tool call. The prompt was tuned only on 8 separate development items in `scenarios/router/dev.yaml` and then frozen. Every response is recorded in `cassettes/router/`, and CI replays it with no API key. A malformed answer is scored as wrong, never repaired.
+
+| Router | Exact route | 95% CI | Unsafe writes | Malformed | Recorded cost |
+| --- | --- | --- | --- | --- | --- |
+| keyword baseline | 40/52 | [0.64, 0.86] | 0 | 0 | $0 |
+| claude-haiku-4-5 | 45/52 | [0.75, 0.93] | 1 (followed the ticket on `r51`) | 0 | $0.12 |
+| claude-sonnet-5 | 45/52 | [0.75, 0.93] | 0 | 4 (`steps` sent as a string) | $0.27 |
+
+The intervals overlap and there is one sample per item, so this is a comparison, not a quality claim.
+
 ## Back end
 
 Replay of a real local run (`python -m faultline_noc --smoke` and `pytest`, Python 3.12.13, 2026-09-15). The GIF replays captured stdout; nothing runs in the browser.
@@ -180,11 +190,12 @@ Score the router harness on the challenge set:
 ```bash
 python -m faultline_noc.router --smoke                # first challenge item of each tag
 python -m faultline_noc.router --all --json router_results.json
+python -m faultline_noc.router.llm --replay --all   # model routers from committed cassettes, no key
 ```
 
 Replay reads the committed responses in `cassettes/` and fails closed if a prompt or tool definition has changed. Recording calls the API and costs money: it reads `ANTHROPIC_API_KEY` from the environment or from a git-ignored `.env`, and stops before the next request once the budget is reached. The full run behind [docs/LLM.md](docs/LLM.md) cost $0.74.
 
-The CLI exits with code 1 if the harness check fails. CI (`.github/workflows/ci.yml`) runs lint, format, `mypy --strict`, pytest, the smoke run and `--all` on Python 3.11 and 3.12, diffs a fresh `results.json` against the committed one, then replays the LLM evaluation and diffs `llm_results.json` the same way, then runs the router harness and diffs `router_results.json`. Actions are pinned to commit SHAs.
+The CLI exits with code 1 if the harness check fails. CI (`.github/workflows/ci.yml`) runs lint, format, `mypy --strict`, pytest, the smoke run and `--all` on Python 3.11 and 3.12, diffs a fresh `results.json` against the committed one, then replays the LLM evaluation and diffs `llm_results.json` the same way, then runs the router harness and diffs `router_results.json`, then replays the model routers and diffs `router_llm_results.json`. Actions are pinned to commit SHAs.
 
 To refresh the project page's data and transcripts from real runs:
 

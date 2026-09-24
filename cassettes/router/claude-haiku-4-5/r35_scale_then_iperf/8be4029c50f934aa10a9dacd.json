@@ -1,0 +1,65 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01B1cdS5m7fKemZaLyDmuBuj",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.85,
+    "requires_clarification": false,
+    "steps": [
+     {
+      "agent": "incident",
+      "allowed_capabilities": [
+       "read",
+       "network_write"
+      ],
+      "context_refs": [
+       "nf:upf-1",
+       "cluster:cluster-b"
+      ],
+      "objective": "Scale upf-1 to three replicas in cluster-b",
+      "requires_confirmation": true
+     },
+     {
+      "agent": "testing",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "nf:upf-1",
+       "cluster:cluster-b"
+      ],
+      "objective": "Run the iperf test against upf-1 in cluster-b after the scaling completes",
+      "requires_confirmation": false
+     }
+    ]
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvH5s1yCu6jHpib3p5a",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1348,
+  "output_tokens": 258,
+  "service_tier": "standard"
+ }
+}

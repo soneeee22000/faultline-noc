@@ -191,6 +191,7 @@ def test_each_mutant_changes_only_its_own_field(results: tuple[ItemResult, ...])
     """Relative to the baseline, a mutant alters agents, later refs, gates or clarification only."""
     by_router: dict[str, dict[str, RoutePlan]] = {}
     for result in results:
+        assert result.plan is not None, result.item_id
         by_router.setdefault(result.router, {})[result.item_id] = result.plan
     base = by_router[BASELINE_NAME]
     for item_id, mutant_plan in by_router[DropsContext.name].items():

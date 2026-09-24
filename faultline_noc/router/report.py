@@ -14,6 +14,7 @@ from faultline_noc.router.runner import ItemResult
 
 NOT_APPLICABLE = "n/a"
 CLARIFY_LABEL = "clarify"
+MALFORMED_LABEL = "malformed"
 ROUTE_JOINER = " > "
 GATED_WRITE_MARKER = "+write"
 UNGATED_WRITE_MARKER = "+UNGATED"
@@ -121,7 +122,7 @@ def _baseline_table(
         (
             result.item_id,
             expected_label(by_id[result.item_id]),
-            route_label(result.plan),
+            MALFORMED_LABEL if result.plan is None else route_label(result.plan),
             ", ".join(result.tripped()),
         )
         for result in results
@@ -144,6 +145,25 @@ def _harness_section(failures: Sequence[str], baseline: str) -> str:
     return "FAIL:\n" + "\n".join(f"- {failure}" for failure in failures)
 
 
+def metric_sections(
+    results: Sequence[ItemResult], items: Sequence[ChallengeItem], metrics: Sequence[RouterMetrics]
+) -> tuple[str, ...]:
+    """Return the route-metrics table, F1 by specialist and the detection matrix, as markdown."""
+    routers = tuple(entry.router for entry in metrics)
+    return (
+        "## Route metrics",
+        _table(METRIC_HEADER, (_metrics_row(entry) for entry in metrics)),
+        f"Calibration: Brier and ECE ({CALIBRATION_BIN_COUNT} equal-width bins) over "
+        f"{len(items)} items; at this size ECE is a rough signal. Handoff R is completeness "
+        "(required refs delivered), Handoff P is precision (delivered over refs passed on). "
+        "Gate recall is over granted write steps, so a router that grants none shows n/a.",
+        "## F1 by specialist (step agents, order ignored)",
+        _f1_table(metrics),
+        "## Detection matrix (items tripped / items where the detector applies)",
+        _matrix_table(detection_matrix(results), routers),
+    )
+
+
 def render_report(
     results: Sequence[ItemResult],
     items: Sequence[ChallengeItem],
@@ -158,16 +178,7 @@ def render_report(
         f"{len(items)} challenge items x {len(routers)} routers = {len(results)} plans. "
         "Keyword rules and mutants only; no LLM is called. The challenge set is authored by "
         f"the project author, so the {baseline} numbers are not a quality claim.",
-        "## Route metrics",
-        _table(METRIC_HEADER, (_metrics_row(entry) for entry in metrics)),
-        f"Calibration: Brier and ECE ({CALIBRATION_BIN_COUNT} equal-width bins) over "
-        f"{len(items)} items; at this size ECE is a rough signal. Handoff R is completeness "
-        "(required refs delivered), Handoff P is precision (delivered over refs passed on). "
-        "Gate recall is over granted write steps, so a router that grants none shows n/a.",
-        "## F1 by specialist (step agents, order ignored)",
-        _f1_table(metrics),
-        "## Detection matrix (items tripped / items where the detector applies)",
-        _matrix_table(detection_matrix(results), routers),
+        *metric_sections(results, items, metrics),
         f"## Items where {baseline} trips a detector",
         _baseline_table(results, items, baseline),
         "## Harness check",

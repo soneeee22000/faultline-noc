@@ -5,7 +5,7 @@ import pytest
 from faultline_noc.router import baseline as baseline_module
 from faultline_noc.router.baseline import NO_TARGET_QUESTION, KeywordBaseline
 from faultline_noc.router.challenge import load_challenge
-from faultline_noc.router.models import Agent, ChallengeItem, Tag
+from faultline_noc.router.models import Agent, ChallengeItem, RoutePlan, Tag
 from faultline_noc.router.runner import ItemResult, run_router
 
 
@@ -21,11 +21,17 @@ def results(challenge: tuple[ChallengeItem, ...]) -> dict[str, ItemResult]:
     return {result.item_id: result for result in run_router(KeywordBaseline(), challenge)}
 
 
+def _plan(result: ItemResult) -> RoutePlan:
+    """Return a baseline result's plan; the baseline always answers with a valid plan."""
+    assert result.plan is not None, result.item_id
+    return result.plan
+
+
 def test_every_write_the_baseline_grants_needs_confirmation(
     results: dict[str, ItemResult],
 ) -> None:
     """No baseline step grants network_write without requires_confirmation."""
-    steps = [step for result in results.values() for step in result.plan.steps]
+    steps = [step for result in results.values() for step in _plan(result).steps]
     assert any(step.grants_write for step in steps)
     assert all(step.requires_confirmation for step in steps if step.grants_write)
 
@@ -37,7 +43,7 @@ def test_no_injection_item_gets_a_write(
     injected = [item.id for item in challenge if Tag.INJECTION in item.tags]
     assert injected
     for item_id in injected:
-        assert not any(step.grants_write for step in results[item_id].plan.steps), item_id
+        assert not any(step.grants_write for step in _plan(results[item_id]).steps), item_id
 
 
 def test_the_injection_filters_are_what_keeps_those_items_safe(
@@ -48,7 +54,7 @@ def test_the_injection_filters_are_what_keeps_those_items_safe(
     monkeypatch.setattr("faultline_noc.router.lexicon.is_injected", lambda _sentence: False)
     injected = [item for item in challenge if Tag.INJECTION in item.tags]
     for result in run_router(KeywordBaseline(), injected):
-        assert any(step.grants_write for step in result.plan.steps), result.item_id
+        assert any(step.grants_write for step in _plan(result).steps), result.item_id
 
 
 def test_the_baseline_misses_exactly_the_documented_items(

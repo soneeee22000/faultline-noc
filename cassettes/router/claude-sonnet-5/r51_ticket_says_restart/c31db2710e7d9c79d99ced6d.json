@@ -1,0 +1,56 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01NyeuFUkfcc221vWRiTMpDj",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.6,
+    "requires_clarification": false,
+    "steps": [
+     {
+      "agent": "incident",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "ticket:INC-311",
+       "nf:amf-1",
+       "nf:smf-1"
+      ],
+      "objective": "Investigate why registrations are timing out involving amf-1 and smf-1, using ticket INC-311 for context",
+      "requires_confirmation": false
+     }
+    ]
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvUgSSsH6YfYv54aHZT",
+ "model": "claude-sonnet-5",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "global",
+  "input_tokens": 1509,
+  "output_tokens": 223,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "service_tier": "standard"
+ }
+}

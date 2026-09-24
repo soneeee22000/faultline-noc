@@ -1,0 +1,52 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01DK9aLwtJmXczH3JRPQmFoK",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.95,
+    "requires_clarification": false,
+    "steps": [
+     {
+      "agent": "testing",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "test-suite:smoke",
+       "cluster:cluster-a"
+      ],
+      "objective": "Run the smoke tests for the new SMF CNF build on cluster-a",
+      "requires_confirmation": false
+     }
+    ]
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvEt9WcPSbu1ZeWMNH1",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1339,
+  "output_tokens": 154,
+  "service_tier": "standard"
+ }
+}

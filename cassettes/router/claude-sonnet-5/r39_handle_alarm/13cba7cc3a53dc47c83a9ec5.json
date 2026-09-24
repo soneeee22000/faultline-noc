@@ -1,0 +1,42 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_017fgi3ZPPA7AuKckBCacdSE",
+   "input": {
+    "clarification_question": "Could you clarify what you'd like done for ALM-0042 — should I investigate the cause of this alarm, or do you want a specific change made to the network (like a restart or rollback)?",
+    "confidence": 0.6,
+    "requires_clarification": true,
+    "steps": []
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvSXYMk4DPDkY9QL3Kk",
+ "model": "claude-sonnet-5",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "global",
+  "input_tokens": 1468,
+  "output_tokens": 167,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "service_tier": "standard"
+ }
+}

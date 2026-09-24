@@ -1,0 +1,52 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_016F7X1T1n7QMpJFHg4HHN2Y",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.85,
+    "requires_clarification": false,
+    "steps": [
+     {
+      "agent": "incident",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "alarm:ALM-0051",
+       "nf:smf-1"
+      ],
+      "objective": "Investigate why PDU session setups failed on smf-1 around 14:00 by examining alarm ALM-0051 and analyzing relevant logs and metrics from the SMF-1 network function to identify the root cause",
+      "requires_confirmation": false
+     }
+    ]
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvF21XtzCfyjEm7vRYJ",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1351,
+  "output_tokens": 208,
+  "service_tier": "standard"
+ }
+}

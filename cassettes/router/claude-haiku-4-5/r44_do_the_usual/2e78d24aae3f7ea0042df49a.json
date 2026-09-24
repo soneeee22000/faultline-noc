@@ -1,0 +1,39 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01NhGzG4yJnXaRZmKgWAxLfQ",
+   "input": {
+    "clarification_question": "What is \"the usual\" for cluster A? Please describe the specific work you need: are you looking to run a test, investigate an issue, check documentation, or make a change?",
+    "confidence": 0,
+    "requires_clarification": true,
+    "steps": []
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvJDk4L3DzFTb4qB9tq",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1326,
+  "output_tokens": 127,
+  "service_tier": "standard"
+ }
+}

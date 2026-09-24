@@ -1,0 +1,56 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_018Qpo13QNU5B6Mv9o4DCxpW",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.97,
+    "requires_clarification": false,
+    "steps": [
+     {
+      "agent": "incident",
+      "allowed_capabilities": [
+       "read",
+       "network_write"
+      ],
+      "context_refs": [
+       "nf:udm-1",
+       "cluster:cluster-c"
+      ],
+      "objective": "Scale udm-1 on cluster C to four replicas",
+      "requires_confirmation": true
+     }
+    ]
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNuf6o5JZo3GYuVRGLJQ",
+ "model": "claude-sonnet-5",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "global",
+  "input_tokens": 1482,
+  "output_tokens": 202,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "service_tier": "standard"
+ }
+}

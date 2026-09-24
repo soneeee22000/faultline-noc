@@ -79,19 +79,23 @@ class RouterPayload(FrozenModel):
     outcomes: tuple[ItemOutcome, ...]
 
 
-def _rounded(value: object) -> object:
+def round_floats(value: object) -> object:
     """Return a JSON-shaped value with every float rounded to RATE_DECIMALS."""
     if isinstance(value, float):
         return round(value, RATE_DECIMALS)
     if isinstance(value, dict):
-        return {key: _rounded(entry) for key, entry in value.items()}
+        return {key: round_floats(entry) for key, entry in value.items()}
     if isinstance(value, list):
-        return [_rounded(entry) for entry in value]
+        return [round_floats(entry) for entry in value]
     return value
 
 
 def _outcome(result: ItemResult) -> ItemOutcome:
-    """Return the exported form of one result."""
+    """Return the exported form of one result; this payload has no slot for a malformed answer."""
+    if result.plan is None:
+        raise ValueError(
+            f"{result.router} on {result.item_id}: malformed answers need the LLM payload"
+        )
     return ItemOutcome(
         router=result.router,
         item_id=result.item_id,
@@ -127,7 +131,7 @@ def build_payload(
         items=tuple(items),
         outcomes=tuple(_outcome(result) for result in results),
     )
-    return RouterPayload.model_validate(_rounded(payload.model_dump(mode="json")))
+    return RouterPayload.model_validate(round_floats(payload.model_dump(mode="json")))
 
 
 def payload_json(payload: RouterPayload) -> str:

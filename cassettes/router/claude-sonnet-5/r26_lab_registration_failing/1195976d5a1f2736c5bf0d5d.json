@@ -1,0 +1,39 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_012prfGCNDPG45GfMy2xQPKQ",
+   "input": {
+    "steps": "{\"steps\":[{\"agent\":\"incident\",\"objective\":\"Investigate why lab 5g-core-101 is failing every registration attempt and identify root cause\",\"context_refs\":[\"lab:5g-core-101\"],\"allowed_capabilities\":[\"read\"],\"requires_confirmation\":false}],\"requires_clarification\":false,\"clarification_question\":null,\"confidence\":0.82}"
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvPteGiBnunwEkfDxyZ",
+ "model": "claude-sonnet-5",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "global",
+  "input_tokens": 1475,
+  "output_tokens": 153,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "service_tier": "standard"
+ }
+}

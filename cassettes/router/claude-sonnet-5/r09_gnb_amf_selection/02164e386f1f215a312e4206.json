@@ -1,0 +1,42 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01TUWhKLubVtF3nkWmvD1oih",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.97,
+    "requires_clarification": false,
+    "steps": "{\"steps\":[{\"agent\":\"knowledge\",\"objective\":\"Explain how a gNB selects an AMF for a UE's initial registration (AMF selection procedure, e.g. via NG Setup, GUAMI/PLMN weighting, NAS routing information).\",\"context_refs\":[\"doc:ng-setup\"],\"allowed_capabilities\":[\"read\"],\"requires_confirmation\":false}]}"
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvLqoo3rqp3V6Kv8mc7",
+ "model": "claude-sonnet-5",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "global",
+  "input_tokens": 1475,
+  "output_tokens": 238,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "service_tier": "standard"
+ }
+}

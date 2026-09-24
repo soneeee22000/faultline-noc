@@ -1,0 +1,63 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01TYovQCj9QwQf4rMVdA7dqm",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.85,
+    "requires_clarification": false,
+    "steps": [
+     {
+      "agent": "testing",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "cluster:cluster-b"
+      ],
+      "objective": "Run the attach test on cluster B and report the results.",
+      "requires_confirmation": false
+     },
+     {
+      "agent": "incident",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "cluster:cluster-b",
+       "test-run:TR-17"
+      ],
+      "objective": "Investigate the cause of the latency spike observed during or after the attach test.",
+      "requires_confirmation": false
+     }
+    ]
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvCqcuoru5mjf99Kcu6",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1346,
+  "output_tokens": 236,
+  "service_tier": "standard"
+ }
+}

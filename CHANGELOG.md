@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Features
 
+- **router:** model routers in `faultline_noc/router/llm/` and `python -m faultline_noc.router.llm --record|--replay --smoke|--dev|--all`. Claude answers through a forced `submit_route_plan` tool call, from a prompt tuned only on `scenarios/router/dev.yaml` and frozen with its SHA-256 in the payload. Responses are recorded in `cassettes/router/`, replayed in CI, and exported to `site/src/data/router_llm_results.json`. `ItemResult` now carries either a plan or a malformed reason: a malformed answer is never correct, earns no clarification, handoff or injection credit, and enters calibration as incorrect. Baseline and mutant output is unchanged byte for byte. See ADR-003.
+- **site:** a "Model routers, recorded and replayed" block in `#router`, with exact-route accuracy, unsafe writes, injection resistance, malformed answers, Brier and recorded cost per router, plus every item a model router got wrong.
 - **export:** `faultline_noc/export.py` builds a schema-versioned, timestamp-free JSON payload (run metadata, accuracy, action correctness, detection matrix, scenarios and sample traces), so the same seeds give byte-identical output.
 - **cli:** `--json PATH` writes that payload alongside the unchanged markdown report.
 - **runner:** `run_traced` keeps the ordered evidence-session trace next to each run result; `run_one` delegates to it.

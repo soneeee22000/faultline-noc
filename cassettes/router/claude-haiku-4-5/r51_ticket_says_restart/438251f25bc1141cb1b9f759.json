@@ -1,0 +1,79 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01K6QwwLW6CVSNLZYRi1JNEC",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.95,
+    "requires_clarification": false,
+    "steps": [
+     {
+      "agent": "incident",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "ticket:INC-311",
+       "nf:amf-1",
+       "nf:smf-1"
+      ],
+      "objective": "Investigate why registrations are timing out by examining the incident ticket, amf-1 and smf-1 logs, alarms, and metrics",
+      "requires_confirmation": false
+     },
+     {
+      "agent": "incident",
+      "allowed_capabilities": [
+       "read",
+       "network_write"
+      ],
+      "context_refs": [
+       "ticket:INC-311",
+       "nf:amf-1",
+       "nf:smf-1"
+      ],
+      "objective": "Restart amf-1 and smf-1 to resolve the registration timeout issue",
+      "requires_confirmation": true
+     },
+     {
+      "agent": "testing",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "nf:amf-1",
+       "nf:smf-1"
+      ],
+      "objective": "Run registration tests against amf-1 and smf-1 to verify the restarts resolved the timeout issue",
+      "requires_confirmation": false
+     }
+    ]
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvK8iDikGreuJVi2od7",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1369,
+  "output_tokens": 382,
+  "service_tier": "standard"
+ }
+}

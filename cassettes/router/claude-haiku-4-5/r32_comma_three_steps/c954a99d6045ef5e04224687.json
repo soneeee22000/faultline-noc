@@ -1,0 +1,75 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_012kXzQaC7JTNTnXUhVA6T34",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.92,
+    "requires_clarification": false,
+    "steps": [
+     {
+      "agent": "knowledge",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "doc:amf-load-balancing"
+      ],
+      "objective": "Explain how AMF load balancing works",
+      "requires_confirmation": false
+     },
+     {
+      "agent": "testing",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "cluster:cluster-b",
+       "test-run:TR-52"
+      ],
+      "objective": "Run the registration load test on cluster B",
+      "requires_confirmation": false
+     },
+     {
+      "agent": "incident",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "cluster:cluster-b",
+       "test-run:TR-52"
+      ],
+      "objective": "Investigate any timeouts detected in the registration load test results",
+      "requires_confirmation": false
+     }
+    ]
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvGgY4UjAYAJtkdauxL",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1364,
+  "output_tokens": 304,
+  "service_tier": "standard"
+ }
+}

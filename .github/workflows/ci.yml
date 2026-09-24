@@ -44,6 +44,10 @@ jobs:
         run: python -m faultline_noc.router --all --json "$RUNNER_TEMP/router_results.json"
       - name: Committed router_results.json matches a fresh run
         run: diff -u site/src/data/router_results.json "$RUNNER_TEMP/router_results.json"
+      - name: LLM router replay (recorded cassettes, no API key)
+        run: python -m faultline_noc.router.llm --replay --all --json "$RUNNER_TEMP/router_llm_results.json"
+      - name: Committed router_llm_results.json matches the replay
+        run: diff -u site/src/data/router_llm_results.json "$RUNNER_TEMP/router_llm_results.json"
 
   site:
     runs-on: ubuntu-latest

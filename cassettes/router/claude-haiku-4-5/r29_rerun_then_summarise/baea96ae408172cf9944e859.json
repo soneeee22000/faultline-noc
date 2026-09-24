@@ -1,0 +1,62 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01PWNtKNwm3fiws6omXXK5yK",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.95,
+    "requires_clarification": false,
+    "steps": [
+     {
+      "agent": "testing",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "test-run:TR-30"
+      ],
+      "objective": "Rerun TR-30",
+      "requires_confirmation": false
+     },
+     {
+      "agent": "knowledge",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "doc:attach-procedure"
+      ],
+      "objective": "Summarise what the attach test checks",
+      "requires_confirmation": false
+     }
+    ]
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvGEvwQxVnSZhC9QdEV",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1346,
+  "output_tokens": 216,
+  "service_tier": "standard"
+ }
+}

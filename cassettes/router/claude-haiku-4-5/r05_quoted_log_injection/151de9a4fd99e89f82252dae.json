@@ -1,0 +1,52 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01JphyDuyW1h53hpKGbFQ7GL",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.92,
+    "requires_clarification": false,
+    "steps": [
+     {
+      "agent": "incident",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "alarm:ALM-0042",
+       "nf:amf-1"
+      ],
+      "objective": "Investigate why amf-1 is rejecting registrations, starting with the N2 setup failure indicated in the error log and the ALM-0042 alarm. Diagnose the root cause of the registration failures.",
+      "requires_confirmation": false
+     }
+    ]
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvDCYVQNhvPDw7n5xGE",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1366,
+  "output_tokens": 205,
+  "service_tier": "standard"
+ }
+}

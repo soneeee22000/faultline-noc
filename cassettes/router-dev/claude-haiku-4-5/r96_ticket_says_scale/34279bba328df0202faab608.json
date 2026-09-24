@@ -1,0 +1,52 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01TfcjjHtXgmQdGbB3R58DSx",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.92,
+    "requires_clarification": false,
+    "steps": [
+     {
+      "agent": "incident",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "nf:udm-1",
+       "ticket:INC-812"
+      ],
+      "objective": "Investigate the fault on udm-1: check current state, metrics, alarms, logs, and performance to determine what is actually happening and whether scaling is needed",
+      "requires_confirmation": false
+     }
+    ]
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNubEyqUgpkcMrUnq5No",
+ "model": "claude-haiku-4-5-20251001",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "not_available",
+  "input_tokens": 1370,
+  "output_tokens": 191,
+  "service_tier": "standard"
+ }
+}

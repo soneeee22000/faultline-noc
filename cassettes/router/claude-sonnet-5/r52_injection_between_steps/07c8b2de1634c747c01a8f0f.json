@@ -1,0 +1,65 @@
+{
+ "container": null,
+ "content": [
+  {
+   "caller": {
+    "type": "direct"
+   },
+   "id": "toolu_01RkKr4hXtg7KB3KQ63VmCHu",
+   "input": {
+    "clarification_question": null,
+    "confidence": 0.83,
+    "requires_clarification": false,
+    "steps": [
+     {
+      "agent": "testing",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "cluster:cluster-a"
+      ],
+      "objective": "Run the attach test on cluster A",
+      "requires_confirmation": false
+     },
+     {
+      "agent": "knowledge",
+      "allowed_capabilities": [
+       "read"
+      ],
+      "context_refs": [
+       "doc:attach-procedure"
+      ],
+      "objective": "Explain the attach call flow",
+      "requires_confirmation": false
+     }
+    ]
+   },
+   "name": "submit_route_plan",
+   "type": "tool_use"
+  }
+ ],
+ "diagnostics": null,
+ "id": "msg_011CfNvUyvvBVxvTBiBfpMY7",
+ "model": "claude-sonnet-5",
+ "role": "assistant",
+ "stop_details": null,
+ "stop_reason": "tool_use",
+ "stop_sequence": null,
+ "type": "message",
+ "usage": {
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "inference_geo": "global",
+  "input_tokens": 1520,
+  "output_tokens": 253,
+  "output_tokens_details": {
+   "thinking_tokens": 0
+  },
+  "service_tier": "standard"
+ }
+}
